@@ -12,8 +12,8 @@ utn-utnito/
   course/         # Material de aprendizaje clase por clase
 ```
 
-- [`full_project`](./full_project/README.md)
-- [`course`](./course/README.md)
+- [`full_project`](./full_project)
+- [`course`](./course)
 
 ## English
 
@@ -27,5 +27,5 @@ utn-utnito/
   course/         # Class-by-class learning material
 ```
 
-- [`full_project`](./full_project/README.md)
-- [`course`](./course/README.md)
+- [`full_project`](./full_project)
+- [`course`](./course)
