@@ -3,9 +3,6 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
-DOCKER_DIR="${PROJECT_DIR}/chat-docker"
-ENV_FILE="${DOCKER_DIR}/.env"
-ENV_EXAMPLE_FILE="${DOCKER_DIR}/.env.example"
 
 log_info() {
   printf '[INFO] %s\n' "$1"
@@ -31,15 +28,6 @@ require_docker_compose() {
   if ! docker compose version >/dev/null 2>&1; then
     log_error "Docker Compose v2 is not available (docker compose)."
     exit 1
-  fi
-}
-
-ensure_env_file() {
-  if [[ ! -f "${ENV_FILE}" ]]; then
-    cp "${ENV_EXAMPLE_FILE}" "${ENV_FILE}"
-    log_info "Created ${ENV_FILE} from .env.example."
-  else
-    log_info "Using existing ${ENV_FILE}."
   fi
 }
 
@@ -76,8 +64,6 @@ require_command docker
 require_docker_compose
 
 log_info "Manual tools reminder: install Docker Desktop, Visual Studio Code, and DBeaver manually."
-
-ensure_env_file
 
 install_node_dependencies "${PROJECT_DIR}/backend/chat-core-service" "chat-core-service"
 install_node_dependencies "${PROJECT_DIR}/frontend/chat-app" "chat-app"

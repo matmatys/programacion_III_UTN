@@ -2,9 +2,6 @@ $ErrorActionPreference = "Stop"
 
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ProjectDir = Resolve-Path (Join-Path $ScriptDir "..")
-$DockerDir = Join-Path $ProjectDir "chat-docker"
-$EnvFile = Join-Path $DockerDir ".env"
-$EnvExampleFile = Join-Path $DockerDir ".env.example"
 
 function Write-Info($Message) {
   Write-Host "[INFO] $Message"
@@ -25,15 +22,6 @@ function Require-DockerCompose {
     docker compose version | Out-Null
   } catch {
     throw "Docker Compose v2 is not available (docker compose)."
-  }
-}
-
-function Ensure-EnvFile {
-  if (-not (Test-Path $EnvFile)) {
-    Copy-Item $EnvExampleFile $EnvFile
-    Write-Info "Created $EnvFile from .env.example."
-  } else {
-    Write-Info "Using existing $EnvFile."
   }
 }
 
@@ -74,8 +62,6 @@ Require-Command docker
 Require-DockerCompose
 
 Write-Info "Manual tools reminder: install Docker Desktop, Visual Studio Code, and DBeaver manually."
-
-Ensure-EnvFile
 
 Install-NodeDependencies (Join-Path $ProjectDir "backend/chat-core-service") "chat-core-service"
 Install-NodeDependencies (Join-Path $ProjectDir "frontend/chat-app") "chat-app"

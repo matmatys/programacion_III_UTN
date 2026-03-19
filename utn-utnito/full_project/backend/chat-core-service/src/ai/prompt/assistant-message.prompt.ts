@@ -1,7 +1,7 @@
 import { ConfigService } from '@nestjs/config';
 import { GenerateReplyRequest } from '../ai-provider.interface';
 
-export function buildChatGptMessagePrompt(
+export function buildAssistantMessagePrompt(
   configService: ConfigService,
   request: GenerateReplyRequest,
 ): string {

@@ -1,3 +1,5 @@
+name: utn-utnito
+
 services:
   chat-core-service:
     profiles:
@@ -5,21 +7,11 @@ services:
     build:
       context: ../backend/chat-core-service
       dockerfile: Dockerfile
-    container_name: ${COMPOSE_PROJECT_NAME:-utn-utnito}-chat-core-service
+    container_name: utn-utnito-chat-core-service
+    env_file:
+      - ../backend/chat-core-service/.env.docker
     ports:
-      - "${CORE_SERVICE_PORT:-4012}:3001"
-    environment:
-      APP_NAME: utn-utnito-chat-core-service
-      APP_PORT: 3001
-      AI_PROVIDER: ${AI_PROVIDER:-mock}
-      AI_ON_ERROR_FALLBACK: ${AI_ON_ERROR_FALLBACK:-mock}
-      CHAT_MESSAGE_MAX_LENGTH: ${CHAT_MESSAGE_MAX_LENGTH:-20000}
-      AI_ASSISTANT_NAME: ${AI_ASSISTANT_NAME:-UTNito}
-      AI_ASSISTANT_DESCRIPTION: ${AI_ASSISTANT_DESCRIPTION:-an AI assistant who knows everything about the Argentina national football team}
-      AI_ASSISTANT_PERSONALITY: ${AI_ASSISTANT_PERSONALITY:-an obsessive and extremely passionate Argentina national team fan who constantly talks about La Scaloneta, World Cup glory, historic matches, legendary players, and why Argentina is the greatest national team in football history}
-      AI_CONTEXT_MAX_PAIRS: ${AI_CONTEXT_MAX_PAIRS:-5}
-      AI_N8N_WEBHOOK_URL: ${AI_N8N_WEBHOOK_URL:-http://chat-n8n:5678/webhook/utnito-prompt-processing}
-      AI_N8N_TIMEOUT_MS: ${AI_N8N_TIMEOUT_MS:-15000}
+      - "4012:3001"
     networks:
       - utn-utnito-network
     restart: unless-stopped
@@ -32,21 +24,39 @@ services:
 
   chat-n8n:
     image: n8nio/n8n:latest
-    container_name: ${COMPOSE_PROJECT_NAME:-utn-utnito}-chat-n8n
+    container_name: utn-utnito-chat-n8n
+    env_file:
+      - ../backend/n8n/.env.docker
     ports:
-      - "${N8N_PORT:-5690}:5678"
-    environment:
-      N8N_BASIC_AUTH_ACTIVE: ${N8N_BASIC_AUTH_ACTIVE:-true}
-      N8N_BASIC_AUTH_USER: ${N8N_BASIC_AUTH_USER:-utn_ai_admin}
-      N8N_BASIC_AUTH_PASSWORD: ${N8N_BASIC_AUTH_PASSWORD:-utn_ai_admin_password}
-      GENERIC_TIMEZONE: ${GENERIC_TIMEZONE:-America/Argentina/Buenos_Aires}
-      N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "true"
-      N8N_RUNNERS_ENABLED: "true"
+      - "5690:5678"
     volumes:
       - n8n-data:/home/node/.n8n
     networks:
       - utn-utnito-network
     restart: unless-stopped
+
+  chat-ollama:
+    profiles:
+      - ollama
+    build:
+      context: ../backend/ollama
+      dockerfile: Dockerfile
+    container_name: chat-ollama
+    env_file:
+      - ../backend/ollama/.env.docker
+    ports:
+      - "8300:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    networks:
+      - utn-utnito-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "ollama list >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 20s
 
   chat-frontend:
     profiles:
@@ -54,9 +64,9 @@ services:
     build:
       context: ../frontend/chat-app
       dockerfile: Dockerfile
-    container_name: ${COMPOSE_PROJECT_NAME:-utn-utnito}-chat-frontend
+    container_name: utn-utnito-chat-frontend
     ports:
-      - "${FRONTEND_PORT:-4300}:80"
+      - "4300:80"
     depends_on:
       chat-core-service:
         condition: service_healthy
@@ -72,8 +82,10 @@ services:
 
 volumes:
   n8n-data:
-    name: ${COMPOSE_PROJECT_NAME:-utn-utnito}-n8n-data
+    name: utn-utnito-n8n-data
+  ollama-data:
+    name: utn-utnito-ollama-data
 
 networks:
   utn-utnito-network:
-    name: ${COMPOSE_PROJECT_NAME:-utn-utnito}-network
+    name: utn-utnito-network

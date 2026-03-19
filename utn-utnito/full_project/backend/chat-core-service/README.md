@@ -27,7 +27,11 @@ cp .env.example .env
 ```
 
 By default, AI provider is mock (`AI_PROVIDER=mock`).
+Available provider values are:
+- `mock`
+- `chatgpt` (through n8n + OpenAI)
+- `ollama` (through n8n + local Docker Ollama service `chat-ollama`)
 
-If you want ChatGPT through n8n, follow the Docker and n8n integration guide in the central project README:
+If you want ChatGPT or Ollama through n8n, follow the Docker and n8n integration guide in the central project README:
 
 - [full_project/README.md](../../README.md)

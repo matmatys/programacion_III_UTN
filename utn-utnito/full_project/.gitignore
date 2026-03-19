@@ -4,3 +4,4 @@
 **/coverage
 **/out-tsc
 chat-docker/.env
+backend/ollama/.env.docker

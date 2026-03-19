@@ -4,8 +4,10 @@ $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ProjectDir = Resolve-Path (Join-Path $ScriptDir "..")
 $DockerDir = Join-Path $ProjectDir "chat-docker"
 $ComposeFile = Join-Path $DockerDir "docker-compose.yml"
-$EnvFile = Join-Path $DockerDir ".env"
-$EnvExampleFile = Join-Path $DockerDir ".env.example"
+
+$frontendPort = 4300
+$coreServicePort = 4012
+$n8nPort = 5690
 
 function Write-Info($Message) {
   Write-Host "[INFO] $Message"
@@ -13,25 +15,6 @@ function Write-Info($Message) {
 
 function Write-WarnMessage($Message) {
   Write-Host "[WARN] $Message"
-}
-
-function Import-DotEnv($Path) {
-  if (-not (Test-Path $Path)) {
-    return
-  }
-
-  Get-Content $Path | ForEach-Object {
-    $line = $_.Trim()
-    if ($line -eq "" -or $line.StartsWith("#")) {
-      return
-    }
-
-    if ($line -match '^([A-Za-z_][A-Za-z0-9_]*)=(.*)$') {
-      $key = $matches[1]
-      $value = $matches[2].Trim('"').Trim("'")
-      [System.Environment]::SetEnvironmentVariable($key, $value, "Process")
-    }
-  }
 }
 
 function Wait-ForHttp($Url, $Label) {
@@ -53,25 +36,14 @@ function Wait-ForHttp($Url, $Label) {
   Write-WarnMessage "$Label did not become reachable at $Url after $($attempts * $delaySeconds) seconds."
 }
 
-if (-not (Test-Path $EnvFile)) {
-  Copy-Item $EnvExampleFile $EnvFile
-  Write-WarnMessage "Missing .env file. Created $EnvFile from .env.example."
-}
-
 Write-Info "Running diagnostics before startup (full mode)."
 & (Join-Path $ScriptDir "doctor.ps1") -Mode full
 
 Write-Info "Starting full project stack (chat-frontend, chat-core-service, chat-n8n)."
-docker compose --env-file $EnvFile -f $ComposeFile --profile full up -d
+docker compose -f $ComposeFile --profile full up -d
 
 Write-Info "Current container status:"
-docker compose --env-file $EnvFile -f $ComposeFile ps
-
-Import-DotEnv $EnvFile
-
-$frontendPort = if ($env:FRONTEND_PORT) { $env:FRONTEND_PORT } else { "4300" }
-$coreServicePort = if ($env:CORE_SERVICE_PORT) { $env:CORE_SERVICE_PORT } else { "4012" }
-$n8nPort = if ($env:N8N_PORT) { $env:N8N_PORT } else { "5690" }
+docker compose -f $ComposeFile ps
 
 Wait-ForHttp "http://localhost:$coreServicePort/health" "chat-core-service health endpoint"
 Wait-ForHttp "http://localhost:$frontendPort" "chat-frontend"

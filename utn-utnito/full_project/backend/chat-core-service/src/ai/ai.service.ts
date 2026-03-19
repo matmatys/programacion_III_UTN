@@ -4,6 +4,7 @@ import { AiProvider, GenerateReplyRequest } from './ai-provider.interface';
 import { MockAiProvider } from './mock-ai.provider';
 import { ChatGptAiProvider } from './chatgpt-ai.provider';
 import { AiProviderType } from './model/ai-provider-type.enum';
+import { OllamaAiProvider } from './ollama-ai.provider';
 
 @Injectable()
 export class AiService {
@@ -13,6 +14,7 @@ export class AiService {
     private readonly configService: ConfigService,
     private readonly mockAiProvider: MockAiProvider,
     private readonly chatGptAiProvider: ChatGptAiProvider,
+    private readonly ollamaAiProvider: OllamaAiProvider,
   ) {}
 
   async generateReply(request: GenerateReplyRequest): Promise<string> {
@@ -37,10 +39,13 @@ export class AiService {
     try {
       return await selectedProvider.generateReply(request);
     } catch (error) {
-      if (provider === AiProviderType.CHATGPT && fallbackMode === AiProviderType.MOCK) {
+      if (
+        (provider === AiProviderType.CHATGPT || provider === AiProviderType.OLLAMA) &&
+        fallbackMode === AiProviderType.MOCK
+      ) {
         const errorMessage = error instanceof Error ? error.message : String(error);
         this.logger.warn(
-          `${AiProviderType.CHATGPT} provider failed ("${errorMessage}"). Falling back to ${AiProviderType.MOCK} provider.`,
+          `${provider} provider failed ("${errorMessage}"). Falling back to ${AiProviderType.MOCK} provider.`,
         );
         return this.mockAiProvider.generateReply(request);
       }
@@ -53,6 +58,8 @@ export class AiService {
     switch (provider) {
       case AiProviderType.CHATGPT:
         return this.chatGptAiProvider;
+      case AiProviderType.OLLAMA:
+        return this.ollamaAiProvider;
       case AiProviderType.MOCK:
       default:
         return this.mockAiProvider;
@@ -64,6 +71,8 @@ export class AiService {
     switch (normalizedProvider) {
       case AiProviderType.CHATGPT:
         return AiProviderType.CHATGPT;
+      case AiProviderType.OLLAMA:
+        return AiProviderType.OLLAMA;
       case AiProviderType.MOCK:
       default:
         return AiProviderType.MOCK;

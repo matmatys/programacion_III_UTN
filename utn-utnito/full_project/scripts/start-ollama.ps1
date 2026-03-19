@@ -4,7 +4,7 @@ $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ProjectDir = Resolve-Path (Join-Path $ScriptDir "..")
 $DockerDir = Join-Path $ProjectDir "chat-docker"
 $ComposeFile = Join-Path $DockerDir "docker-compose.yml"
-$n8nPort = 5690
+$ollamaPort = 8300
 
 function Write-Info($Message) {
   Write-Host "[INFO] $Message"
@@ -15,7 +15,7 @@ function Write-WarnMessage($Message) {
 }
 
 function Wait-ForHttp($Url, $Label) {
-  $attempts = 20
+  $attempts = 30
   $delaySeconds = 2
 
   for ($i = 1; $i -le $attempts; $i++) {
@@ -33,15 +33,15 @@ function Wait-ForHttp($Url, $Label) {
   Write-WarnMessage "$Label did not become reachable at $Url after $($attempts * $delaySeconds) seconds."
 }
 
-Write-Info "Running diagnostics before startup (n8n mode)."
-& (Join-Path $ScriptDir "doctor.ps1") -Mode n8n
+Write-Info "Running diagnostics before startup (ollama mode)."
+& (Join-Path $ScriptDir "doctor.ps1") -Mode ollama
 
-Write-Info "Starting n8n service."
-docker compose -f $ComposeFile up -d chat-n8n
+Write-Info "Starting optional Ollama service."
+docker compose -f $ComposeFile --profile ollama up -d chat-ollama
 
 Write-Info "Current container status:"
 docker compose -f $ComposeFile ps
 
-Wait-ForHttp "http://localhost:$n8nPort" "chat-n8n"
+Wait-ForHttp "http://localhost:$ollamaPort/api/tags" "chat-ollama"
 
-Write-Info "utn-utnito n8n service is running."
+Write-Info "Optional Ollama service is running."

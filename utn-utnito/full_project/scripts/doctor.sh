@@ -5,9 +5,12 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 DOCKER_DIR="${PROJECT_DIR}/chat-docker"
 COMPOSE_FILE="${DOCKER_DIR}/docker-compose.yml"
-ENV_FILE="${DOCKER_DIR}/.env"
-ENV_EXAMPLE_FILE="${DOCKER_DIR}/.env.example"
 DOCTOR_MODE="${1:-n8n}"
+
+FRONTEND_PORT=4300
+CORE_SERVICE_PORT=4012
+N8N_PORT=5690
+OLLAMA_PORT=8300
 
 log_info() {
   printf '[INFO] %s\n' "$1"
@@ -42,18 +45,6 @@ check_docker_compose() {
   return 1
 }
 
-load_env_file() {
-  local source_file="$1"
-  if [[ -f "${source_file}" ]]; then
-    # shellcheck disable=SC1090
-    set -a && source "${source_file}" && set +a
-    log_info "Loaded environment values from ${source_file}."
-    return
-  fi
-
-  log_warn "Environment file not found: ${source_file}"
-}
-
 port_in_use() {
   local port="$1"
   if command -v lsof >/dev/null 2>&1; then
@@ -67,15 +58,14 @@ port_in_use() {
 
 diagnose_ports() {
   local collisions=0
-  local frontend_port="${FRONTEND_PORT:-4300}"
-  local core_service_port="${CORE_SERVICE_PORT:-4012}"
-  local n8n_port="${N8N_PORT:-5690}"
   local ports=()
 
   if [[ "${DOCTOR_MODE}" == "full" ]]; then
-    ports=("${frontend_port}" "${core_service_port}" "${n8n_port}")
+    ports=("${FRONTEND_PORT}" "${CORE_SERVICE_PORT}" "${N8N_PORT}")
+  elif [[ "${DOCTOR_MODE}" == "ollama" ]]; then
+    ports=("${OLLAMA_PORT}")
   else
-    ports=("${n8n_port}")
+    ports=("${N8N_PORT}")
   fi
 
   for port in "${ports[@]}"; do
@@ -88,7 +78,7 @@ diagnose_ports() {
   done
 
   if ((collisions > 0)); then
-    log_error "Detected ${collisions} port collision(s). Update chat-docker/.env before starting services."
+    log_error "Detected ${collisions} port collision(s)."
     return 1
   fi
 
@@ -96,12 +86,7 @@ diagnose_ports() {
 }
 
 validate_compose() {
-  local compose_env_file="${ENV_FILE}"
-  if [[ ! -f "${compose_env_file}" ]]; then
-    compose_env_file="${ENV_EXAMPLE_FILE}"
-  fi
-
-  if docker compose --env-file "${compose_env_file}" -f "${COMPOSE_FILE}" config -q; then
+  if docker compose -f "${COMPOSE_FILE}" config -q; then
     log_info "docker-compose.yml is valid."
     return 0
   fi
@@ -118,8 +103,8 @@ print_versions() {
   log_info "git version: $(git --version 2>/dev/null || echo 'not available')"
 }
 
-if [[ "${DOCTOR_MODE}" != "n8n" && "${DOCTOR_MODE}" != "full" ]]; then
-  log_error "Invalid doctor mode: ${DOCTOR_MODE}. Allowed values: n8n | full"
+if [[ "${DOCTOR_MODE}" != "n8n" && "${DOCTOR_MODE}" != "full" && "${DOCTOR_MODE}" != "ollama" ]]; then
+  log_error "Invalid doctor mode: ${DOCTOR_MODE}. Allowed values: n8n | full | ollama"
   exit 1
 fi
 
@@ -134,12 +119,6 @@ check_docker_compose || status=1
 
 if ((status != 0)); then
   exit "${status}"
-fi
-
-if [[ -f "${ENV_FILE}" ]]; then
-  load_env_file "${ENV_FILE}"
-else
-  load_env_file "${ENV_EXAMPLE_FILE}"
 fi
 
 print_versions

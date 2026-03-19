@@ -1,7 +1,7 @@
 $ErrorActionPreference = "Stop"
 
 param(
-  [ValidateSet("n8n", "full")]
+  [ValidateSet("n8n", "full", "ollama")]
   [string]$Mode = "n8n"
 )
 
@@ -9,8 +9,11 @@ $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ProjectDir = Resolve-Path (Join-Path $ScriptDir "..")
 $DockerDir = Join-Path $ProjectDir "chat-docker"
 $ComposeFile = Join-Path $DockerDir "docker-compose.yml"
-$EnvFile = Join-Path $DockerDir ".env"
-$EnvExampleFile = Join-Path $DockerDir ".env.example"
+
+$frontendPort = 4300
+$coreServicePort = 4012
+$n8nPort = 5690
+$ollamaPort = 8300
 
 function Write-Info($Message) {
   Write-Host "[INFO] $Message"
@@ -45,28 +48,6 @@ function Check-DockerCompose {
   }
 }
 
-function Import-DotEnv($Path) {
-  if (-not (Test-Path $Path)) {
-    Write-WarnMessage "Environment file not found: $Path"
-    return
-  }
-
-  Get-Content $Path | ForEach-Object {
-    $line = $_.Trim()
-    if ($line -eq "" -or $line.StartsWith("#")) {
-      return
-    }
-
-    if ($line -match '^([A-Za-z_][A-Za-z0-9_]*)=(.*)$') {
-      $key = $matches[1]
-      $value = $matches[2].Trim('"').Trim("'")
-      [System.Environment]::SetEnvironmentVariable($key, $value, "Process")
-    }
-  }
-
-  Write-Info "Loaded environment values from $Path."
-}
-
 function Test-PortAvailable($Port) {
   try {
     $existing = Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue
@@ -77,9 +58,9 @@ function Test-PortAvailable($Port) {
   }
 }
 
-function Validate-Compose($ComposeEnvFile) {
+function Validate-Compose {
   try {
-    docker compose --env-file $ComposeEnvFile -f $ComposeFile config -q
+    docker compose -f $ComposeFile config -q
     Write-Info "docker-compose.yml is valid."
     return $true
   } catch {
@@ -101,30 +82,20 @@ if (-not $statusOk) {
   exit 1
 }
 
-if (Test-Path $EnvFile) {
-  Import-DotEnv $EnvFile
-  $ComposeEnvFile = $EnvFile
-} else {
-  Import-DotEnv $EnvExampleFile
-  $ComposeEnvFile = $EnvExampleFile
-}
-
 Write-Info ("node version: " + (node -v))
 Write-Info ("npm version: " + (npm -v))
 Write-Info ("docker version: " + (docker --version))
 Write-Info ("docker compose version: " + (docker compose version))
 Write-Info ("git version: " + (git --version))
 
-if (-not (Validate-Compose $ComposeEnvFile)) {
+if (-not (Validate-Compose)) {
   exit 1
 }
 
-$frontendPort = if ($env:FRONTEND_PORT) { [int]$env:FRONTEND_PORT } else { 4300 }
-$coreServicePort = if ($env:CORE_SERVICE_PORT) { [int]$env:CORE_SERVICE_PORT } else { 4012 }
-$n8nPort = if ($env:N8N_PORT) { [int]$env:N8N_PORT } else { 5690 }
-
 if ($Mode -eq "full") {
   $ports = @($frontendPort, $coreServicePort, $n8nPort)
+} elseif ($Mode -eq "ollama") {
+  $ports = @($ollamaPort)
 } else {
   $ports = @($n8nPort)
 }
@@ -140,7 +111,7 @@ foreach ($port in $ports) {
 }
 
 if ($collisions -gt 0) {
-  Write-ErrorMessage "Detected $collisions port collision(s). Update chat-docker/.env before startup."
+  Write-ErrorMessage "Detected $collisions port collision(s)."
   exit 1
 }
 

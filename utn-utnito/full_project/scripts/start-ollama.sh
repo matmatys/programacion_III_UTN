@@ -5,9 +5,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 DOCKER_DIR="${PROJECT_DIR}/chat-docker"
 COMPOSE_FILE="${DOCKER_DIR}/docker-compose.yml"
-FRONTEND_PORT=4300
-CORE_SERVICE_PORT=4012
-N8N_PORT=5690
+OLLAMA_PORT=8300
 
 log_info() {
   printf '[INFO] %s\n' "$1"
@@ -20,7 +18,7 @@ log_warn() {
 wait_for_http() {
   local url="$1"
   local label="$2"
-  local attempts=20
+  local attempts=30
   local delay_seconds=2
   local attempt=1
 
@@ -43,17 +41,15 @@ wait_for_http() {
   return 1
 }
 
-log_info "Running diagnostics before startup (full mode)."
-"${SCRIPT_DIR}/doctor.sh" full
+log_info "Running diagnostics before startup (ollama mode)."
+"${SCRIPT_DIR}/doctor.sh" ollama
 
-log_info "Starting full project stack (chat-frontend, chat-core-service, chat-n8n)."
-docker compose -f "${COMPOSE_FILE}" --profile full up -d
+log_info "Starting optional Ollama service."
+docker compose -f "${COMPOSE_FILE}" --profile ollama up -d chat-ollama
 
 log_info "Current container status:"
 docker compose -f "${COMPOSE_FILE}" ps
 
-wait_for_http "http://localhost:${CORE_SERVICE_PORT}/health" "chat-core-service health endpoint" || true
-wait_for_http "http://localhost:${FRONTEND_PORT}" "chat-frontend" || true
-wait_for_http "http://localhost:${N8N_PORT}" "chat-n8n" || true
+wait_for_http "http://localhost:${OLLAMA_PORT}/api/tags" "chat-ollama" || true
 
-log_info "utn-utnito full stack is running."
+log_info "Optional Ollama service is running."
