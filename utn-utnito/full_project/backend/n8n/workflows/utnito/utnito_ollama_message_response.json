@@ -21,7 +21,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "={{ ($env.OLLAMA_BASE_URL || 'http://chat-ollama:11434') + '/api/generate' }}",
+        "url": "={{ ($env['OLLAMA_BASE_URL'] || 'http://chat-ollama:11434') + '/api/generate' }}",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ { model: $json.body.ollamaModel || 'llama3.2', prompt: $json.body.prompt, stream: false } }}",

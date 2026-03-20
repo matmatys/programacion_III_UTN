@@ -26,10 +26,12 @@ This repository contains the practical course implementation for **Programacion 
 - [Frontend](#frontend-en)
 - [Backend](#backend-en)
 - [Docker](#docker-en)
+- [Ollama Guide](backend/ollama/README.md)
 - [Arquitectura](#architecture-es)
 - [Frontend (ES)](#frontend-es)
 - [Backend (ES)](#backend-es)
 - [Docker (ES)](#docker-es)
+- [Guia de Ollama](backend/ollama/README.md)
 
 <a id="architecture-en"></a>
 
@@ -143,101 +145,16 @@ If n8n/OpenAI fails, backend fallback behavior is controlled by `AI_ON_ERROR_FAL
 
 #### 4) Configure Ollama integration (n8n + Ollama)
 
-You can run Ollama in two modes:
+Use the dedicated guide:
 
-- **Ollama Docker** (recommended for cross-platform consistency)
-- **Ollama Local** (recommended on macOS for better performance with native GPU/Metal)
+- [`backend/ollama/README.md`](./backend/ollama)
 
-##### Option A: Ollama Docker
+This guide includes:
 
-1. Create local config file:
-   - `cp backend/n8n/.env.docker.example backend/n8n/.env.docker`
-   - `cp backend/ollama/.env.docker.example backend/ollama/.env.docker`
-2. In `backend/n8n/.env.docker`, keep:
-   - `OLLAMA_BASE_URL=http://chat-ollama:11434`
-3. In `backend/ollama/.env.docker`, set:
-   - `MODEL_NAME=llama3.2`
-4. Start optional Ollama container:
-   - `docker compose --profile ollama up -d chat-ollama`
-5. Import workflow:
-   - `backend/n8n/workflows/utnito/utnito_ollama_message_response.json`
-6. In `backend/chat-core-service/.env.docker`, set:
-   - `AI_PROVIDER=ollama`
-   - `AI_OLLAMA_MODEL=llama3.2`
-   - `AI_N8N_OLLAMA_WEBHOOK_URL=http://chat-n8n:5678/webhook/utnito-ollama-prompt-processing`
-7. Restart backend service.
-
-##### Option B: Ollama Local (host machine)
-
-1. Install and run Ollama on host machine (outside Docker).
-2. Ensure model exists locally (for example `llama3.2`).
-3. Create/update n8n env file:
-   - `cp backend/n8n/.env.docker.example backend/n8n/.env.docker`
-4. In `backend/n8n/.env.docker`, set:
-   - If n8n runs in Docker: `OLLAMA_BASE_URL=http://host.docker.internal:11434`
-   - If n8n runs locally: `OLLAMA_BASE_URL=http://localhost:11434`
-5. Import workflow:
-   - `backend/n8n/workflows/utnito/utnito_ollama_message_response.json`
-6. In `backend/chat-core-service/.env.docker`, set:
-   - `AI_PROVIDER=ollama`
-   - `AI_OLLAMA_MODEL=llama3.2`
-   - `AI_N8N_OLLAMA_WEBHOOK_URL=http://chat-n8n:5678/webhook/utnito-ollama-prompt-processing`
-7. Restart backend service.
-
-Note:
-- Keep `AI_OLLAMA_MODEL` aligned with the model available in Ollama.
-- `MODEL_NAME` in `backend/ollama/.env.docker` applies only to **Ollama Docker** mode.
-- `OLLAMA_BASE_URL` in `backend/n8n/.env.docker` defines whether n8n uses Docker Ollama or local host Ollama.
-- `backend/n8n/.env.docker` is local configuration and should not be committed.
-- If you need lower memory usage, you can use a smaller model (for example `llama3.2:1b`), but response quality may be lower.
-
-#### 5) Ollama LLMs (Suggested Models)
-
-You can choose the model by setting:
-
-- `MODEL_NAME` in `backend/ollama/.env.docker`
-- `AI_OLLAMA_MODEL` in `backend/chat-core-service/.env.docker`
-
-Both values must match.
-
-Example:
-
-```env
-MODEL_NAME=llama3.2
-AI_OLLAMA_MODEL=llama3.2
-```
-
-##### Small models
-
-| Model | Params | Approx RAM | Quality vs Llama 3.2 3B | Best for | Env value |
-|---|---:|---:|---|---|---|
-| `llama3.2:3b` | 3B | ~2-3 GB | Baseline reference | Stable baseline | `llama3.2:3b` |
-| `phi4-mini` | 3.8B | ~2.5-4 GB | Better (strong reasoning) | Coherent chat, instructions | `phi4-mini` |
-| `qwen2.5:3b` / `qwen3:4b` | 3B / 4B | ~1.9-3 GB | Equal or better (especially Spanish) | Natural Spanish conversation | `qwen2.5:3b` |
-| `gemma2:2b` | 2B | ~1.5-2.5 GB | Very good and fast | Maximum lightness | `gemma2:2b` |
-| `deepseek-r1:1.5b` | 1.5B | ~1-2 GB | Lower | Fast testing | `deepseek-r1:1.5b` |
-
-##### Medium models (up to ~6 GB RAM)
-
-| Model | Params | Peak RAM | Typical speed* | Quality vs Llama 3.2 3B | Best for | Env value |
-|---|---:|---:|---:|---|---|---|
-| `llama3.1:8b` | 8B | ~5.8-6.2 GB | ~35-45 t/s | Much better | General use, coding, long chat | `llama3.1:8b` |
-| `qwen3:7b` / `qwen2.5:7b` | 7B | ~5.0-5.8 GB | ~38-50 t/s | Better | Spanish + multilingual + coding | `qwen3:7b` |
-| `mistral-small3:7b` | 7B | ~5.2-5.7 GB | ~45-55 t/s | Better in fluency | Fast chat, creative writing | `mistral-small3:7b` |
-| `phi4:8b` | ~8B | ~5.5-6.0 GB | ~30-40 t/s | Excellent reasoning | Complex instructions, education | `phi4:8b` |
-| `gemma3:9b` | 9B | ~6.0-6.5 GB | ~25-35 t/s | Very good | Higher quality if machine can handle it | `gemma3:9b` |
-
-##### Conversational models (medium usage vs `llama3.2:latest`)
-
-| Model | Usage vs `llama3.2:latest` | Conversational quality vs `llama3.2:latest` | Recommendation | Env value |
-|---|---|---|---|---|
-| `gpt-oss:20b` | Medium | Better | Recommended alternative | `gpt-oss:20b` |
-| `dolphin-mixtral:latest` | Medium | Better | Optional advanced | `dolphin-mixtral:latest` |
-| `llama3.1:8b` | Medium | Similar to better | Optional | `llama3.1:8b` |
-| `deepseek-r1:8b` | Medium | Similar to lower | Not recommended (`gpt-oss:20b` performed better) | `deepseek-r1:8b` |
-| `gemma3:27b` | High | Lower in these tests | Not recommended (`gpt-oss:20b` performed better) | `gemma3:27b` |
-
-\* Approximate values. They depend on hardware, context length, and prompt size.
+- Ollama Docker vs Ollama Local setup
+- n8n + backend environment variables
+- workflow import and webhook wiring
+- suggested Ollama models by resource profile
 
 ---
 
@@ -264,6 +181,7 @@ Este repositorio contiene el material práctico de implementación de **Programa
 - [Frontend](#frontend-es)
 - [Backend](#backend-es)
 - [Docker](#docker-es)
+- [Guia de Ollama](backend/ollama/README.md)
 
 <a id="architecture-es"></a>
 
@@ -377,98 +295,13 @@ Si falla n8n/OpenAI, el fallback del backend se controla con `AI_ON_ERROR_FALLBA
 
 #### 4) Configurar integración con Ollama (n8n + Ollama)
 
-Podés usar Ollama en dos modos:
+Usá la guía dedicada:
 
-- **Ollama Docker** (recomendado para consistencia multiplataforma)
-- **Ollama Local** (recomendado en macOS por mejor performance con GPU/Metal nativa)
+- [`backend/ollama/README.md`](./backend/ollama)
 
-##### Opción A: Ollama Docker
+Esa guía incluye:
 
-1. Crear archivo de configuración local:
-   - `cp backend/n8n/.env.docker.example backend/n8n/.env.docker`
-   - `cp backend/ollama/.env.docker.example backend/ollama/.env.docker`
-2. En `backend/n8n/.env.docker`, mantener:
-   - `OLLAMA_BASE_URL=http://chat-ollama:11434`
-3. En `backend/ollama/.env.docker`, definir:
-   - `MODEL_NAME=llama3.2`
-4. Levantar contenedor opcional de Ollama:
-   - `docker compose --profile ollama up -d chat-ollama`
-5. Importar workflow:
-   - `backend/n8n/workflows/utnito/utnito_ollama_message_response.json`
-6. En `backend/chat-core-service/.env.docker`, definir:
-   - `AI_PROVIDER=ollama`
-   - `AI_OLLAMA_MODEL=llama3.2`
-   - `AI_N8N_OLLAMA_WEBHOOK_URL=http://chat-n8n:5678/webhook/utnito-ollama-prompt-processing`
-7. Reiniciar el backend.
-
-##### Opción B: Ollama Local (host)
-
-1. Instalar y ejecutar Ollama en la máquina host (fuera de Docker).
-2. Verificar que el modelo exista localmente (por ejemplo `llama3.2`).
-3. Crear/actualizar archivo env de n8n:
-   - `cp backend/n8n/.env.docker.example backend/n8n/.env.docker`
-4. En `backend/n8n/.env.docker`, definir:
-   - Si n8n corre en Docker: `OLLAMA_BASE_URL=http://host.docker.internal:11434`
-   - Si n8n corre local: `OLLAMA_BASE_URL=http://localhost:11434`
-5. Importar workflow:
-   - `backend/n8n/workflows/utnito/utnito_ollama_message_response.json`
-6. En `backend/chat-core-service/.env.docker`, definir:
-   - `AI_PROVIDER=ollama`
-   - `AI_OLLAMA_MODEL=llama3.2`
-   - `AI_N8N_OLLAMA_WEBHOOK_URL=http://chat-n8n:5678/webhook/utnito-ollama-prompt-processing`
-7. Reiniciar el backend.
-
-Nota:
-- Mantené `AI_OLLAMA_MODEL` alineado con el modelo disponible en Ollama.
-- `MODEL_NAME` en `backend/ollama/.env.docker` aplica solo al modo **Ollama Docker**.
-- `OLLAMA_BASE_URL` en `backend/n8n/.env.docker` define si n8n usa Ollama Docker u Ollama local en host.
-- `backend/n8n/.env.docker` es configuración local y no se debe comitear.
-- Si necesitás menor consumo de memoria, podés usar un modelo más pequeño (por ejemplo `llama3.2:1b`), pero la calidad de respuesta puede ser menor.
-
-#### 5) Ollama LLMs (Modelos sugeridos)
-
-Podés elegir el modelo configurando:
-
-- `MODEL_NAME` en `backend/ollama/.env.docker`
-- `AI_OLLAMA_MODEL` en `backend/chat-core-service/.env.docker`
-
-Ambos valores deben coincidir.
-
-Ejemplo:
-
-```env
-MODEL_NAME=llama3.2
-AI_OLLAMA_MODEL=llama3.2
-```
-
-##### Modelos pequeños
-
-| Modelo | Parámetros | RAM aprox. | Calidad vs Llama 3.2 3B | Mejor para | Valor en env |
-|---|---:|---:|---|---|---|
-| `llama3.2:3b` | 3B | ~2-3 GB | Referencia baseline | Base estable | `llama3.2:3b` |
-| `phi4-mini` | 3.8B | ~2.5-4 GB | Mejor (razonamiento fuerte) | Chat coherente, instrucciones | `phi4-mini` |
-| `qwen2.5:3b` / `qwen3:4b` | 3B / 4B | ~1.9-3 GB | Igual o superior (especialmente español) | Conversación natural en español | `qwen2.5:3b` |
-| `gemma2:2b` | 2B | ~1.5-2.5 GB | Muy buena y rápida | Máxima ligereza | `gemma2:2b` |
-| `deepseek-r1:1.5b` | 1.5B | ~1-2 GB | Menor | Testing rápido | `deepseek-r1:1.5b` |
-
-##### Modelos medios (hasta ~6 GB RAM)
-
-| Modelo | Parámetros | RAM pico | Velocidad típica* | Calidad vs Llama 3.2 3B | Mejor para | Valor en env |
-|---|---:|---:|---:|---|---|---|
-| `llama3.1:8b` | 8B | ~5.8-6.2 GB | ~35-45 t/s | Muy superior | Uso general, código, chat largo | `llama3.1:8b` |
-| `qwen3:7b` / `qwen2.5:7b` | 7B | ~5.0-5.8 GB | ~38-50 t/s | Superior | Español + multilenguaje + código | `qwen3:7b` |
-| `mistral-small3:7b` | 7B | ~5.2-5.7 GB | ~45-55 t/s | Superior en fluidez | Chat rápido, escritura creativa | `mistral-small3:7b` |
-| `phi4:8b` | ~8B | ~5.5-6.0 GB | ~30-40 t/s | Excelente razonamiento | Instrucciones complejas, educación | `phi4:8b` |
-| `gemma3:9b` | 9B | ~6.0-6.5 GB | ~25-35 t/s | Muy buena | Calidad alta si la máquina aguanta | `gemma3:9b` |
-
-##### Modelos conversacionales (consumo medio vs `llama3.2:latest`)
-
-| Modelo | Consumo vs `llama3.2:latest` | Calidad conversacional vs `llama3.2:latest` | Recomendación | Valor en env |
-|---|---|---|---|---|
-| `gpt-oss:20b` | Medio | Mejor | Alternativa recomendada | `gpt-oss:20b` |
-| `dolphin-mixtral:latest` | Medio | Mejor | Opcional avanzado | `dolphin-mixtral:latest` |
-| `llama3.1:8b` | Medio | Similar a mejor | Opcional | `llama3.1:8b` |
-| `deepseek-r1:8b` | Medio | Similar a menor | No recomendado (`gpt-oss:20b` funcionó mejor) | `deepseek-r1:8b` |
-| `gemma3:27b` | Alto | Menor en estas pruebas | No recomendado (`gpt-oss:20b` funcionó mejor) | `gemma3:27b` |
-
-\* Valores aproximados. Dependen del hardware, el contexto y el tamaño del prompt.
+- configuración Ollama Docker vs Ollama Local
+- variables de entorno de n8n y backend
+- import del workflow y conexión del webhook
+- modelos sugeridos de Ollama según perfil de recursos
