@@ -215,7 +215,7 @@ AI_OLLAMA_MODEL=llama3.2
 
 | Model | Params | Peak RAM | Typical speed* | Quality vs Llama 3.2 3B | Best for | Env value |
 |---|---:|---:|---:|---|---|---|
-| `llama3.3:8b` | 8B | ~5.8-6.2 GB | ~35-45 t/s | Much better | General use, coding, long chat | `llama3.3:8b` |
+| `llama3.1:8b` | 8B | ~5.8-6.2 GB | ~35-45 t/s | Much better | General use, coding, long chat | `llama3.1:8b` |
 | `qwen3:7b` / `qwen2.5:7b` | 7B | ~5.0-5.8 GB | ~38-50 t/s | Better | Spanish + multilingual + coding | `qwen3:7b` |
 | `mistral-small3:7b` | 7B | ~5.2-5.7 GB | ~45-55 t/s | Better in fluency | Fast chat, creative writing | `mistral-small3:7b` |
 | `phi4:8b` | ~8B | ~5.5-6.0 GB | ~30-40 t/s | Excellent reasoning | Complex instructions, education | `phi4:8b` |
@@ -433,7 +433,7 @@ AI_OLLAMA_MODEL=llama3.2
 
 | Modelo | Parámetros | RAM pico | Velocidad típica* | Calidad vs Llama 3.2 3B | Mejor para | Valor en env |
 |---|---:|---:|---:|---|---|---|
-| `llama3.3:8b` | 8B | ~5.8-6.2 GB | ~35-45 t/s | Muy superior | Uso general, código, chat largo | `llama3.3:8b` |
+| `llama3.1:8b` | 8B | ~5.8-6.2 GB | ~35-45 t/s | Muy superior | Uso general, código, chat largo | `llama3.1:8b` |
 | `qwen3:7b` / `qwen2.5:7b` | 7B | ~5.0-5.8 GB | ~38-50 t/s | Superior | Español + multilenguaje + código | `qwen3:7b` |
 | `mistral-small3:7b` | 7B | ~5.2-5.7 GB | ~45-55 t/s | Superior en fluidez | Chat rápido, escritura creativa | `mistral-small3:7b` |
 | `phi4:8b` | ~8B | ~5.5-6.0 GB | ~30-40 t/s | Excelente razonamiento | Instrucciones complejas, educación | `phi4:8b` |
