@@ -1,0 +1,21 @@
+.class-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  text-align: center;
+  color: #ececf1;
+  background: #1f2024;
+  padding: 1rem;
+}
+
+.class-screen h1 {
+  margin: 0;
+}
+
+.class-screen p {
+  margin: 0;
+  color: #a7adb7;
+}

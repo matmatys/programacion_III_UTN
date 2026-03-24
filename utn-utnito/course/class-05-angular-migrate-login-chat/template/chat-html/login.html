@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UTNito | Login</title>
+    <link rel="stylesheet" href="./tokens.css" />
+    <link rel="stylesheet" href="./login.css" />
+  </head>
+  <body>
+    <main class="login-page">
+      <section class="login-card">
+        <div class="brand-block">
+          <img src="./assets/utnito-logo.svg" alt="UTNito logo" class="brand-logo" />
+          <h1>Welcome to UTNito</h1>
+          <p class="subtitle">Sign in to chat with <strong>UTNito</strong>.</p>
+        </div>
+
+        <form class="login-form" action="./chat.html" method="get" novalidate>
+          <label for="username">Username</label>
+          <input id="username" name="username" type="text" placeholder="e.g. carlos.gardel" />
+
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" placeholder="Enter your password" />
+
+          <p class="error-text">Invalid credentials. Please try again.</p>
+
+          <button type="submit">Login</button>
+        </form>
+
+        <footer class="login-footer">
+          <p class="program-name">UTN Programación III</p>
+          <p>Academic prototype for educational use.</p>
+        </footer>
+      </section>
+    </main>
+  </body>
+</html>

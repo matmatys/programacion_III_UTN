@@ -1,0 +1,117 @@
+/* Static login layout styles for the UTNito prototype. */
+.login-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(207, 95, 111, 0.22) 0%, rgba(207, 95, 111, 0) 42%),
+    radial-gradient(circle at 85% 90%, rgba(176, 82, 97, 0.18) 0%, rgba(176, 82, 97, 0) 42%),
+    var(--bg-page);
+}
+
+.login-card {
+  width: min(460px, 100%);
+  background: var(--bg-main);
+  border: 1px solid var(--border-soft);
+  border-radius: 28px;
+  box-shadow: var(--shadow-card);
+  padding: 28px;
+}
+
+.brand-block {
+  text-align: center;
+}
+
+.brand-logo {
+  width: 90px;
+  height: 90px;
+  display: block;
+  margin: 0 auto;
+}
+
+.brand-block h1 {
+  margin: 2px 0 8px;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  margin: 0 0 22px;
+  color: var(--text-secondary);
+  font-size: 1.02rem;
+}
+
+.login-form {
+  display: grid;
+  gap: 8px;
+}
+
+.login-form label {
+  margin-top: 8px;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.login-form input {
+  width: 100%;
+  border: 1px solid var(--border-mid);
+  border-radius: var(--radius-sm);
+  padding: 11px 12px;
+  font-size: 1rem;
+  font-family: var(--font-body);
+  background: var(--bg-input);
+  color: var(--text-primary);
+}
+
+.login-form input::placeholder {
+  color: var(--text-secondary);
+}
+
+.login-form input:focus {
+  outline: 2px solid rgba(207, 95, 111, 0.25);
+  border-color: var(--accent);
+}
+
+.error-text {
+  margin: 6px 0 2px;
+  color: var(--danger);
+  font-size: 0.88rem;
+  display: none;
+}
+
+.login-form.show-error .error-text {
+  display: block;
+}
+
+.login-form button {
+  margin-top: 10px;
+  border: none;
+  border-radius: 12px;
+  background: var(--accent);
+  color: #ffffff;
+  padding: 12px 16px;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.login-form button:hover {
+  background: var(--accent-hover);
+}
+
+.login-footer {
+  margin-top: 16px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.84rem;
+}
+
+.login-footer .program-name {
+  margin: 0 0 4px;
+  color: var(--accent-ink);
+  font-size: 0.9rem;
+  font-weight: 700;
+}

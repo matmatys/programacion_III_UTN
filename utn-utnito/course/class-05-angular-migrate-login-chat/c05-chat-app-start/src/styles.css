@@ -1,0 +1,52 @@
+/* Global design tokens and base element styles shared by login and chat views. */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Source+Sans+3:wght@400;600;700&display=swap');
+
+:root {
+  --font-display: 'Space Grotesk', 'Segoe UI', sans-serif;
+  --font-body: 'Source Sans 3', 'Segoe UI', sans-serif;
+
+  --bg-page: #1f2024;
+  --bg-sidebar: #171717;
+  --bg-main: #25272d;
+  --bg-surface: #2b2d34;
+  --bg-input: #30323a;
+
+  --text-primary: #ececf1;
+  --text-secondary: #a7adb7;
+  --text-on-dark: #ececf1;
+  --text-on-dark-muted: #a7a7ad;
+
+  --border-soft: #353842;
+  --border-mid: #424652;
+
+  --accent: #cf5f6f;
+  --accent-hover: #b95261;
+  --danger: #e06a7f;
+  --accent-soft: #3a2a2f;
+  --accent-soft-border: #5e3943;
+  --accent-ink: #d98a99;
+
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+
+  --shadow-soft: 0 10px 32px rgba(0, 0, 0, 0.32);
+  --shadow-card: 0 20px 45px rgba(0, 0, 0, 0.45);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  background: var(--bg-page);
+}

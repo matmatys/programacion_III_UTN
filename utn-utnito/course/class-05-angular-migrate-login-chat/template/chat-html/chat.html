@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UTNito | Chat</title>
+    <link rel="stylesheet" href="./tokens.css" />
+    <link rel="stylesheet" href="./chat.css" />
+  </head>
+  <body>
+    <input id="sidebar-toggle" class="sidebar-toggle" type="checkbox" />
+    <label class="sidebar-backdrop" for="sidebar-toggle" aria-hidden="true"></label>
+
+    <div class="chat-shell">
+      <aside class="sidebar">
+        <div class="sidebar-top">
+          <label class="mobile-close-btn" for="sidebar-toggle" aria-label="Close menu">✕</label>
+
+          <button class="new-chat-btn" aria-label="Create a new chat">
+            <span class="control-icon">+</span>
+            <span class="control-copy">New chat</span>
+          </button>
+          <label class="chat-list-filter">
+            <span class="filter-icon">⌕</span>
+            <input type="search" placeholder="Filter chats..." />
+          </label>
+          <p class="conversation-label">Your Chats</p>
+        </div>
+
+        <nav class="conversation-nav" aria-label="Conversations">
+          <div class="conversation-item active">
+            <button class="conversation-item-select">
+              <span class="conversation-item-copy">Final project planning</span>
+            </button>
+            <button class="conversation-item-rename" aria-label="Rename chat Final project planning">
+              ✎
+            </button>
+            <button class="conversation-item-archive" aria-label="Archive chat Final project planning">
+              🗑
+            </button>
+          </div>
+          <div class="conversation-item">
+            <button class="conversation-item-select">
+              <span class="conversation-item-copy">REST endpoint questions</span>
+            </button>
+            <button class="conversation-item-rename" aria-label="Rename chat REST endpoint questions">
+              ✎
+            </button>
+            <button class="conversation-item-archive" aria-label="Archive chat REST endpoint questions">
+              🗑
+            </button>
+          </div>
+          <div class="conversation-item">
+            <button class="conversation-item-select">
+              <span class="conversation-item-copy">Docker setup help</span>
+            </button>
+            <button class="conversation-item-rename" aria-label="Rename chat Docker setup help">
+              ✎
+            </button>
+            <button class="conversation-item-archive" aria-label="Archive chat Docker setup help">
+              🗑
+            </button>
+          </div>
+          <div class="conversation-item">
+            <button class="conversation-item-select">
+              <span class="conversation-item-copy">Class checkpoint review</span>
+            </button>
+            <button class="conversation-item-rename" aria-label="Rename chat Class checkpoint review">
+              ✎
+            </button>
+            <button class="conversation-item-archive" aria-label="Archive chat Class checkpoint review">
+              🗑
+            </button>
+          </div>
+        </nav>
+
+        <div class="sidebar-bottom">
+          <div class="user-card">
+            <span class="user-avatar">CG</span>
+            <span class="user-copy">
+              <strong>Carlos Gardel</strong>
+            </span>
+          </div>
+          <a class="logout-btn" href="./login.html">
+            <span class="logout-icon">↩</span>
+            <span class="logout-copy">Log out</span>
+          </a>
+        </div>
+      </aside>
+
+      <main class="chat-main">
+        <header class="chat-header">
+          <div class="header-left">
+            <label class="mobile-menu-btn" for="sidebar-toggle" aria-label="Open menu">☰</label>
+
+            <div>
+              <div class="brand-heading">
+                <img src="./assets/utnito-logo.svg" alt="UTNito logo" />
+                <h1>UTNito</h1>
+              </div>
+              <p>Ask UTNito anything about the course project.</p>
+            </div>
+          </div>
+          <div class="header-tools">
+            <button class="model-chip">UTNito · v1</button>
+            <label class="chat-search">
+              <span>⌕</span>
+              <input type="search" placeholder="Search in this chat..." />
+            </label>
+          </div>
+        </header>
+
+        <section class="message-stream" aria-live="polite">
+          <article class="message assistant">
+            <p>Hi! I am UTNito. Ready to build your project step by step.</p>
+          </article>
+
+          <article class="message user">
+            <p>Can you explain the Sprint 2 backend goals?</p>
+          </article>
+
+          <article class="message assistant">
+            <p>
+              Sprint 2 focuses on REST foundations: conversations, messages, and a clean module
+              structure in NestJS.
+            </p>
+          </article>
+        </section>
+
+        <footer class="composer-wrap">
+          <form class="composer" action="#" method="post">
+            <textarea rows="1" placeholder="Message UTNito..."></textarea>
+            <button type="submit">Send</button>
+          </form>
+          <p class="composer-note">UTNito can make mistakes. Verify critical information.</p>
+        </footer>
+      </main>
+    </div>
+  </body>
+</html>

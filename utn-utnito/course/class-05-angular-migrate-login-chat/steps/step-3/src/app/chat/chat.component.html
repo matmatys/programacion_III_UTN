@@ -1,0 +1,44 @@
+<div class="chat-layout">
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <button class="new-chat-btn" type="button">+ New chat</button>
+      <p class="section-title">Your chats</p>
+      <ul class="chat-list">
+        <li class="chat-item active">Final project planning</li>
+        <li class="chat-item">REST endpoint questions</li>
+      </ul>
+    </div>
+
+    <div class="sidebar-bottom">
+      <div class="user-card">
+        <span class="user-avatar">CG</span>
+        <strong>Carlos Gardel</strong>
+      </div>
+      <button class="logout-btn" type="button">Log out</button>
+    </div>
+  </aside>
+
+  <main class="chat-main">
+    <header class="chat-header">
+      <div class="brand-block">
+        <img src="assets/utnito-logo.svg" alt="UTNito logo" class="brand-logo" />
+        <div>
+          <h1>UTNito</h1>
+          <p>Feel free to talk to UTNito about anything.</p>
+        </div>
+      </div>
+    </header>
+
+    <section class="messages">
+      <article class="message assistant"><p>Hi! I am UTNito. Ready to help.</p></article>
+      <article class="message user"><p>Can we migrate this to Angular?</p></article>
+    </section>
+
+    <footer class="composer-wrap">
+      <form class="composer" (submit)="$event.preventDefault()">
+        <textarea rows="1" placeholder="Message UTNito..."></textarea>
+        <button type="submit">Send</button>
+      </form>
+    </footer>
+  </main>
+</div>

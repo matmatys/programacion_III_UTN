@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C05 Chat App Start",
+      "type": "chrome",
+      "request": "launch",
+      "preLaunchTask": "npm: start",
+      "postDebugTask": "npm: stop:dev",
+      "url": "http://localhost:5300/",
+      "webRoot": "${workspaceFolder}"
+    }
+  ]
+}

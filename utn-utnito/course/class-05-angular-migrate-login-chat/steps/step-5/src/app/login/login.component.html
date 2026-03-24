@@ -1,0 +1,35 @@
+<main class="login-page">
+  <section class="login-card">
+    <header class="brand-block">
+      <img src="assets/utnito-logo.svg" alt="UTNito logo" class="brand-logo" />
+      <h1>Welcome to UTNito</h1>
+      <p class="subtitle">Sign in to chat with <strong>UTNito</strong>.</p>
+    </header>
+
+    <form class="login-form" (submit)="onSubmit($event, usernameInput.value)" novalidate>
+      <label for="username">Username</label>
+      <input
+        #usernameInput
+        id="username"
+        name="username"
+        type="text"
+        placeholder="e.g. carlos.gardel"
+      />
+
+      <label for="password">Password</label>
+      <input
+        id="password"
+        name="password"
+        type="password"
+        placeholder="Enter your password"
+      />
+
+      <button type="submit">Login</button>
+    </form>
+
+    <footer class="login-footer">
+      <p class="program-name">UTN Programacion III</p>
+      <p>Academic prototype for educational use.</p>
+    </footer>
+  </section>
+</main>
