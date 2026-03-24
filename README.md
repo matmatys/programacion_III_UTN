@@ -98,3 +98,7 @@ Para el detalle técnico actualizado, ver [`utn-utnito/full_project/README.md`](
 Nota de puertos:
 - Referencias del stack Docker: `4300` (frontend), `4012` (backend), `5690` (n8n).
 - Referencias de desarrollo local: `5300` (frontend), `5001` (backend).
+
+## Links
+
+[![Hypercommit](https://img.shields.io/badge/Hypercommit-DB2475)](https://hypercommit.com/programacion-iii-utn)
