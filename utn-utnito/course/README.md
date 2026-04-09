@@ -20,6 +20,7 @@ Clases actuales:
 - [`class-05-angular-migrate-login-chat`](./class-05-angular-migrate-login-chat)
 - [`class-06-angular-components-routing`](./class-06-angular-components-routing)
 - [`class-07-angular-binding-events-forms`](./class-07-angular-binding-events-forms)
+- [`class-08-angular-chat-local-state`](./class-08-angular-chat-local-state)
 
 ## English
 
@@ -41,3 +42,5 @@ Current classes:
 - [`class-05-angular-migrate-login-chat`](./class-05-angular-migrate-login-chat)
 - [`class-06-angular-components-routing`](./class-06-angular-components-routing)
 - [`class-07-angular-binding-events-forms`](./class-07-angular-binding-events-forms)
+- [`class-08-angular-chat-local-state`](./class-08-angular-chat-local-state)
+
