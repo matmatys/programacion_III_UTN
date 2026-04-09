@@ -1,0 +1,85 @@
+<div class="chat-layout">
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <button class="new-chat-btn" type="button" (click)="createNewConversation()">+ New chat</button>
+      <p class="section-title">Your chats</p>
+
+      <ul class="chat-list">
+        <li
+          class="chat-item"
+          *ngFor="let conversation of visibleConversations"
+          [class.active]="conversation.id === selectedConversationId"
+        >
+          <button class="chat-item-select" type="button" (click)="selectConversation(conversation.id)">
+            {{ conversation.title }}
+          </button>
+
+          <button
+            class="conversation-item-archive"
+            type="button"
+            aria-label="Archive conversation"
+            (click)="archiveConversation(conversation.id, $event)"
+          >
+            🗑
+          </button>
+        </li>
+      </ul>
+
+      <p class="empty-list" *ngIf="!visibleConversations.length">
+        No active chats available.
+      </p>
+    </div>
+
+    <div class="sidebar-bottom">
+      <div class="user-card">
+        <span class="user-avatar">{{ initials }}</span>
+        <strong>{{ displayName }}</strong>
+      </div>
+      <button class="logout-btn" type="button" (click)="onLogoutClick()">Log out</button>
+    </div>
+  </aside>
+
+  <main class="chat-main">
+    <header class="chat-header">
+      <div class="brand-block">
+        <img src="assets/utnito-logo.svg" alt="UTNito logo" class="brand-logo" />
+        <div>
+          <h1>UTNito</h1>
+          <p>Active conversation: <strong>{{ activeConversationTitle }}</strong></p>
+        </div>
+      </div>
+    </header>
+
+    <section class="messages">
+      <article class="message assistant" *ngIf="!activeConversation">
+        <p>Select a conversation to start.</p>
+      </article>
+
+      <article class="message assistant" *ngIf="activeConversation && !visibleMessages.length">
+        <p>This conversation has no messages yet.</p>
+      </article>
+
+      <article
+        class="message"
+        *ngFor="let message of visibleMessages"
+        [class.assistant]="message.role === 'assistant'"
+        [class.user]="message.role === 'user'"
+      >
+        <p>{{ message.content }}</p>
+      </article>
+    </section>
+
+    <footer class="composer-wrap">
+      <form class="composer" (submit)="sendMessage($event)">
+        <textarea
+          #draftInput
+          rows="1"
+          placeholder="Message UTNito..."
+          [value]="draftMessage"
+          (input)="onDraftInput(draftInput.value)"
+        ></textarea>
+        <button type="submit" [disabled]="!activeConversation || !draftMessage.trim()">Send</button>
+      </form>
+    </footer>
+  </main>
+</div>

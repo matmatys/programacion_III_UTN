@@ -1,0 +1,92 @@
+<main class="demo-shell">
+  <div class="demo-card">
+    <h1>{{ title }}</h1>
+    <p>Use this mini app to explain: <code>*ngIf</code>, <code>*ngFor</code>, and local state.</p>
+
+    <div class="demo-block">
+      <h2>1 - Add new conversation form</h2>
+      <form class="create-form" (submit)="addConversation($event)">
+        <input
+          #titleInput
+          type="text"
+          placeholder="Conversation title"
+          [value]="nextConversationTitle"
+          (input)="nextConversationTitle = titleInput.value"
+        />
+        <textarea
+          #textInput
+          rows="2"
+          placeholder="Conversation text"
+          [value]="nextConversationText"
+          (input)="nextConversationText = textInput.value"
+        ></textarea>
+        <button type="submit">Add conversation</button>
+      </form>
+    </div>
+
+    <div class="demo-block">
+      <h2>2 - Toggle archived conversation section filter state</h2>
+      <button type="button" (click)="toggleArchived()">
+        {{ showArchived ? 'Hide archived chats' : 'Show archived chats' }}
+      </button>
+      <p class="state-line">showArchived = <strong>{{ showArchived }}</strong></p>
+    </div>
+
+    <div class="demo-block">
+      <h2>3 - Render conversation list and empty state</h2>
+      <div class="columns-shell">
+        <div class="column-card">
+          <h3>Active conversations</h3>
+
+          <ul class="list-shell" *ngIf="activeConversations.length; else emptyActive">
+            <li class="conversation-card" *ngFor="let conversation of activeConversations">
+              <div class="conversation-row">
+                <div class="conversation-head">
+                  <strong class="conversation-title">{{ conversation.title }}</strong>
+                </div>
+                <button type="button" class="btn-danger" (click)="toggleConversationArchived(conversation.id)">
+                  Archive
+                </button>
+              </div>
+              <p class="conversation-meta-line">
+                <span class="conversation-meta">id: {{ conversation.id }}</span>
+                <span class="conversation-meta">archived: {{ conversation.archived }}</span>
+              </p>
+              <p class="conversation-text">{{ conversation.text }}</p>
+            </li>
+          </ul>
+
+          <ng-template #emptyActive>
+            <p class="empty-state">No active conversations.</p>
+          </ng-template>
+        </div>
+
+        <div class="column-card" *ngIf="showArchived">
+          <h3>Archived conversations</h3>
+
+          <ul class="list-shell" *ngIf="archivedConversations.length; else emptyArchived">
+            <li class="conversation-card" *ngFor="let conversation of archivedConversations">
+              <div class="conversation-row">
+                <div class="conversation-head">
+                  <strong class="conversation-title">{{ conversation.title }}</strong>
+                </div>
+                <button type="button" class="btn-success" (click)="toggleConversationArchived(conversation.id)">
+                  Unarchive
+                </button>
+              </div>
+              <p class="conversation-meta-line">
+                <span class="conversation-meta">id: {{ conversation.id }}</span>
+                <span class="conversation-meta">archived: {{ conversation.archived }}</span>
+              </p>
+              <p class="conversation-text">{{ conversation.text }}</p>
+            </li>
+          </ul>
+
+          <ng-template #emptyArchived>
+            <p class="empty-state">No archived conversations.</p>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
