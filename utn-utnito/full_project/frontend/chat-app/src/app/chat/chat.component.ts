@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { of } from 'rxjs';
 import { finalize } from 'rxjs/operators';
-import { Conversation } from '../core/model/conversation.model';
+import { Conversation } from '../core/model/conversation.interface';
 import { ConversationStatus } from '../core/model/conversation-status.enum';
-import { Message } from '../core/model/message.model';
+import { Message } from '../core/model/message.interface';
 import { MessageRole } from '../core/model/message-role.enum';
-import { AuthUser } from '../core/model/auth-user.model';
+import { AuthUser } from '../core/model/auth-user.interface';
 import { ApiError } from '../core/model/api-error.model';
 import { isApiErrorCode } from '../core/model/api-error-code.enum';
 import { AuthService } from '../core/service/auth.service';

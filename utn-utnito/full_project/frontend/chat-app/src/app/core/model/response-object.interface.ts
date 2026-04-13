@@ -1,4 +1,4 @@
-import { ResponseMessage } from './response-message.model';
+import { ResponseMessage } from './response-message.interface';
 
 export interface ResponseObject<T> {
   serverTime: string;

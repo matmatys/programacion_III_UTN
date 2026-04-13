@@ -4,12 +4,12 @@ import { map, Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { BaseApiService } from './base-api.service';
-import { Conversation } from '../model/conversation.model';
-import { Pagination } from '../model/pagination.model';
-import { Message } from '../model/message.model';
-import { CreateMessageResponse } from '../model/create-message-response.model';
-import { ResponseObject } from '../model/response-object.model';
-import { ResponseMessage } from '../model/response-message.model';
+import { Conversation } from '../model/conversation.interface';
+import { Pagination } from '../model/pagination.interface';
+import { Message } from '../model/message.interface';
+import { CreateMessageResponse } from '../model/create-message-response.interface';
+import { ResponseObject } from '../model/response-object.interface';
+import { ResponseMessage } from '../model/response-message.interface';
 import { ApiError } from '../model/api-error.model';
 
 @Injectable({

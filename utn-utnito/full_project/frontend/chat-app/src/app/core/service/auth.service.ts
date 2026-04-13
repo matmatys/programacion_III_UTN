@@ -3,8 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { AuthTokens } from '../model/auth-tokens.model';
-import { AuthUser } from '../model/auth-user.model';
+import { AuthTokens } from '../model/auth-tokens.interface';
+import { AuthUser } from '../model/auth-user.interface';
 import { BaseApiService } from './base-api.service';
 import { TokenStorageService } from './token-storage.service';
 

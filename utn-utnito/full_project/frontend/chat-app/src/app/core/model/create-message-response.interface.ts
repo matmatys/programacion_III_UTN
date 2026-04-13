@@ -1,4 +1,4 @@
-import { Message } from './message.model';
+import { Message } from './message.interface';
 
 export interface CreateMessageResponse {
   conversationId: string;
