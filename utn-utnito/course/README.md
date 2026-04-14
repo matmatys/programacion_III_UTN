@@ -21,6 +21,7 @@ Clases actuales:
 - [`class-06-angular-components-routing`](./class-06-angular-components-routing)
 - [`class-07-angular-binding-events-forms`](./class-07-angular-binding-events-forms)
 - [`class-08-angular-chat-local-state`](./class-08-angular-chat-local-state)
+- [`class-09-angular-services-models`](./class-09-angular-services-models)
 
 ## English
 
@@ -43,4 +44,4 @@ Current classes:
 - [`class-06-angular-components-routing`](./class-06-angular-components-routing)
 - [`class-07-angular-binding-events-forms`](./class-07-angular-binding-events-forms)
 - [`class-08-angular-chat-local-state`](./class-08-angular-chat-local-state)
-
+- [`class-09-angular-services-models`](./class-09-angular-services-models)
