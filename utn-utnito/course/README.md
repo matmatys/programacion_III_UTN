@@ -23,6 +23,7 @@ Clases actuales:
 - [`class-08-angular-chat-local-state`](./class-08-angular-chat-local-state)
 - [`class-09-angular-services-models`](./class-09-angular-services-models)
 - [`class-10-angular-async-http`](./class-10-angular-async-http)
+- [`class-11-api-contract-swagger-first`](./class-11-api-contract-swagger-first)
 
 ## English
 
@@ -47,3 +48,4 @@ Current classes:
 - [`class-08-angular-chat-local-state`](./class-08-angular-chat-local-state)
 - [`class-09-angular-services-models`](./class-09-angular-services-models)
 - [`class-10-angular-async-http`](./class-10-angular-async-http)
+- [`class-11-api-contract-swagger-first`](./class-11-api-contract-swagger-first)

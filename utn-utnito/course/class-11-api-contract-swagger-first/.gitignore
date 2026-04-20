@@ -1,0 +1,8 @@
+# Similar baseline to full_project/backend/chat-core-service/.gitignore
+**/node_modules
+**/dist
+**/coverage
+**/*.log
+
+# Avoid accidental lockfile commits in class 11 projects and demos
+**/package-lock.json
