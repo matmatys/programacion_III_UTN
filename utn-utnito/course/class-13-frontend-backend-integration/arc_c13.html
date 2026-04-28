@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f0f2f5; padding: 16px; }
+
+  .title {
+    text-align: center;
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 14px;
+    letter-spacing: 0.3px;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 11px;
+    color: #666;
+    margin-bottom: 18px;
+    margin-top: -10px;
+  }
+
+  .diagram {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  /* ── PANELES ── */
+  .panel {
+    border-radius: 12px;
+    padding: 14px;
+    width: 280px;
+    flex-shrink: 0;
+  }
+  .panel-angular { background: #fff3f3; border: 2px solid #dd0031; }
+  .panel-nest    { background: #fff8f0; border: 2px solid #e0234e; }
+
+  .panel-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
+  }
+  .panel-title { font-size: 13px; font-weight: 700; }
+  .panel-sub   { font-size: 10px; color: #888; margin-top: 1px; }
+
+  /* ── MÓDULO ── */
+  .module {
+    border-radius: 8px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    border: 1.5px solid;
+  }
+  .module-header {
+    padding: 5px 10px;
+    font-size: 10.5px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    letter-spacing: 0.2px;
+  }
+  .module-body { padding: 6px 8px; display: flex; flex-direction: column; gap: 4px; }
+
+  /* Angular modules */
+  .m-app    { border-color: #dd0031; }
+  .m-app .module-header    { background: #dd0031; color: white; }
+  .m-app .module-body      { background: #fff8f8; }
+
+  .m-routes { border-color: #e57373; }
+  .m-routes .module-header { background: #e57373; color: white; }
+  .m-routes .module-body   { background: #fff8f8; }
+
+  .m-core   { border-color: #c62828; }
+  .m-core .module-header   { background: #c62828; color: white; }
+  .m-core .module-body     { background: #fff5f5; }
+
+  /* NestJS modules */
+  .m-nest-app  { border-color: #e0234e; }
+  .m-nest-app .module-header  { background: #e0234e; color: white; }
+  .m-nest-app .module-body    { background: #fff8f8; }
+
+  .m-auth      { border-color: #c2185b; }
+  .m-auth .module-header      { background: #c2185b; color: white; }
+  .m-auth .module-body        { background: #fdf0f5; }
+
+  .m-conv      { border-color: #f57c00; }
+  .m-conv .module-header      { background: #f57c00; color: white; }
+  .m-conv .module-body        { background: #fff8f0; }
+
+  .m-msg       { border-color: #e65100; }
+  .m-msg .module-header       { background: #e65100; color: white; }
+  .m-msg .module-body         { background: #fff5ee; }
+
+  .m-health    { border-color: #388e3c; }
+  .m-health .module-header    { background: #388e3c; color: white; }
+  .m-health .module-body      { background: #f1f8f2; }
+
+  /* ── CHIPS ── */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: 9.5px;
+    font-weight: 600;
+    width: 100%;
+  }
+  .chip-component { background: #e3f2fd; color: #1565c0; border: 1px solid #90caf9; }
+  .chip-service   { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+  .chip-controller{ background: #fce4ec; color: #880e4f; border: 1px solid #f48fb1; }
+  .chip-route     { background: #f3e5f5; color: #6a1b9a; border: 1px solid #ce93d8; }
+  .chip-model     { background: #fff8e1; color: #f57f17; border: 1px solid #ffe082; }
+  .chip-abstract  { background: #eceff1; color: #455a64; border: 1px solid #b0bec5; }
+
+  .chip-dot {
+    width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+  }
+  .dot-component  { background: #1565c0; }
+  .dot-service    { background: #2e7d32; }
+  .dot-controller { background: #880e4f; }
+  .dot-route      { background: #6a1b9a; }
+  .dot-model      { background: #f57f17; }
+  .dot-abstract   { background: #455a64; }
+
+  /* ── FLECHA CENTRAL ── */
+  .center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding-top: 80px;
+    width: 110px;
+    flex-shrink: 0;
+  }
+  .arrow-box {
+    background: white;
+    border: 1.5px solid #bbb;
+    border-radius: 10px;
+    padding: 8px 10px;
+    text-align: center;
+    width: 100%;
+  }
+  .arrow-label { font-size: 9px; font-weight: 700; color: #555; margin-bottom: 4px; }
+  .arrow-line  { font-size: 11px; color: #333; }
+  .arrow-method { font-size: 8px; color: #777; margin-top: 2px; }
+
+  /* ── LEYENDA ── */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 14px;
+    justify-content: center;
+  }
+  .legend-item {
+    display: flex; align-items: center; gap: 4px;
+    font-size: 9px; color: #555;
+  }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* ── LOGO SVG ── */
+  .logo { width: 26px; height: 26px; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="title">Arquitectura Clase 13 — Frontend &amp; Backend Integration</div>
+<div class="subtitle">c13-chat-app-end &nbsp;|&nbsp; Angular 19 + NestJS</div>
+
+<div class="diagram">
+
+  <!-- ══════════ ANGULAR PANEL ══════════ -->
+  <div class="panel panel-angular">
+    <div class="panel-header">
+      <!-- Angular Logo SVG -->
+      <svg class="logo" viewBox="0 0 250 250" xmlns="http://www.w3.org/2000/svg">
+        <polygon fill="#DD0031" points="125,30 162.5,40 196.7,62.5 210,97.5 210,152.5 196.7,187.5 162.5,210 125,220 87.5,210 53.3,187.5 40,152.5 40,97.5 53.3,62.5 87.5,40"/>
+        <polygon fill="#C3002F" points="125,30 125,220 162.5,210 196.7,187.5 210,152.5 210,97.5 196.7,62.5 162.5,40"/>
+        <path fill="white" d="M125,52l-69,155h26l13-33h60l13,33h26L125,52z M125,105l21,49h-42L125,105z"/>
+      </svg>
+      <div>
+        <div class="panel-title" style="color:#dd0031">FRONTEND — Angular</div>
+        <div class="panel-sub">puerto :4200</div>
+      </div>
+    </div>
+
+    <!-- AppModule -->
+    <div class="module m-app">
+      <div class="module-header">📦 AppModule <span style="font-weight:400;opacity:.85">(raíz)</span></div>
+      <div class="module-body">
+        <span class="chip chip-component"><span class="chip-dot dot-component"></span>AppComponent &nbsp;<em style="font-weight:400;color:#666">(root bootstrap)</em></span>
+      </div>
+    </div>
+
+    <!-- Routes -->
+    <div class="module m-routes">
+      <div class="module-header">🗺️ Router (app.routes.ts)</div>
+      <div class="module-body">
+        <span class="chip chip-route"><span class="chip-dot dot-route"></span>/login → LoginComponent</span>
+        <span class="chip chip-route"><span class="chip-dot dot-route"></span>/chat &nbsp;→ ChatComponent</span>
+        <span class="chip chip-route"><span class="chip-dot dot-route"></span>** &nbsp;&nbsp;&nbsp;→ redirect /login</span>
+      </div>
+    </div>
+
+    <!-- Componentes -->
+    <div class="module m-app">
+      <div class="module-header">🖼️ Componentes</div>
+      <div class="module-body">
+        <span class="chip chip-component"><span class="chip-dot dot-component"></span>LoginComponent</span>
+        <span class="chip chip-component"><span class="chip-dot dot-component"></span>ChatComponent</span>
+      </div>
+    </div>
+
+    <!-- Core: Services -->
+    <div class="module m-core">
+      <div class="module-header">🧩 Core — Services</div>
+      <div class="module-body">
+        <span class="chip chip-service"><span class="chip-dot dot-service"></span>AuthService &nbsp;<em style="font-weight:400;color:#555">(estado de sesión)</em></span>
+        <span class="chip chip-service"><span class="chip-dot dot-service"></span>AuthApiService &nbsp;<em style="font-weight:400;color:#555">(HTTP)</em></span>
+        <span class="chip chip-service"><span class="chip-dot dot-service"></span>ChatService &nbsp;<em style="font-weight:400;color:#555">(estado del chat)</em></span>
+        <span class="chip chip-service"><span class="chip-dot dot-service"></span>ChatApiService &nbsp;<em style="font-weight:400;color:#555">(HTTP)</em></span>
+        <span class="chip chip-abstract"><span class="chip-dot dot-abstract"></span>BaseApiService &nbsp;<em style="font-weight:400;color:#555">(base URL)</em></span>
+        <span class="chip chip-abstract"><span class="chip-dot dot-abstract"></span>MockBackendService</span>
+      </div>
+    </div>
+
+    <!-- Modelos -->
+    <div class="module m-routes">
+      <div class="module-header">📄 Interfaces / Models</div>
+      <div class="module-body">
+        <span class="chip chip-model"><span class="chip-dot dot-model"></span>AuthUser · AuthSession</span>
+        <span class="chip chip-model"><span class="chip-dot dot-model"></span>Conversation · Message</span>
+        <span class="chip chip-model"><span class="chip-dot dot-model"></span>CreateMessageResponse</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ FLECHAS ══════════ -->
+  <div class="center">
+    <div class="arrow-box">
+      <div class="arrow-label">POST /auth/login</div>
+      <div class="arrow-line">→</div>
+      <div class="arrow-method">AuthApiService</div>
+    </div>
+    <div class="arrow-box">
+      <div class="arrow-label">GET /conversations</div>
+      <div class="arrow-line">⇄</div>
+      <div class="arrow-method">ChatApiService</div>
+    </div>
+    <div class="arrow-box">
+      <div class="arrow-label">POST /conversations</div>
+      <div class="arrow-line">→</div>
+      <div class="arrow-method">ChatApiService</div>
+    </div>
+    <div class="arrow-box">
+      <div class="arrow-label">GET /messages</div>
+      <div class="arrow-line">⇄</div>
+      <div class="arrow-method">ChatApiService</div>
+    </div>
+    <div class="arrow-box">
+      <div class="arrow-label">POST /messages</div>
+      <div class="arrow-line">→</div>
+      <div class="arrow-method">ChatApiService</div>
+    </div>
+    <div style="font-size:9px;color:#888;text-align:center;margin-top:4px">HTTP REST<br>JSON</div>
+  </div>
+
+  <!-- ══════════ NESTJS PANEL ══════════ -->
+  <div class="panel panel-nest">
+    <div class="panel-header">
+      <!-- NestJS Logo SVG -->
+      <svg class="logo" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#e0234e" d="M49.3 6.2c-1.1-.5-2.4-.3-3.3.5L30.5 19.8c-1.1.9-1.4 2.5-.6 3.7l2.2 3.3-14.4 10.7c-1.2.9-1.5 2.6-.6 3.8l20.2 27.1c.9 1.2 2.6 1.5 3.8.6l14.4-10.7 2.2 3.3c.9 1.2 2.6 1.5 3.7.6L77 50.1c1-.8 1.3-2.2.7-3.3L50.8 7C50.4 6.6 49.9 6.3 49.3 6.2z"/>
+        <path fill="#ea2845" d="M61.4 58.2L41.2 31.1l-2.2-3.3 2.2-1.7 15.5-11.5 2.2 3.3L74 44.9z"/>
+        <path fill="#fff" d="M38 37.5l-8.5 6.3 8.5 11.4 8.5-6.3z"/>
+      </svg>
+      <div>
+        <div class="panel-title" style="color:#e0234e">BACKEND — NestJS</div>
+        <div class="panel-sub">chat-core-service &nbsp;:3001</div>
+      </div>
+    </div>
+
+    <!-- AppModule Nest -->
+    <div class="module m-nest-app">
+      <div class="module-header">📦 AppModule <span style="font-weight:400;opacity:.85">(raíz)</span></div>
+      <div class="module-body">
+        <span class="chip chip-abstract"><span class="chip-dot dot-abstract"></span>Imports: Auth · Conversation · Message · Health</span>
+      </div>
+    </div>
+
+    <!-- AuthModule -->
+    <div class="module m-auth">
+      <div class="module-header">🔐 AuthModule</div>
+      <div class="module-body">
+        <span class="chip chip-controller"><span class="chip-dot dot-controller"></span>AuthController &nbsp;<em style="font-weight:400;color:#666">POST /auth/login</em></span>
+        <span class="chip chip-service"><span class="chip-dot dot-service"></span>AuthService &nbsp;<em style="font-weight:400;color:#555">(lógica login)</em></span>
+        <span class="chip chip-model"><span class="chip-dot dot-model"></span>AuthUser · AuthSession · LoginRequest</span>
+      </div>
+    </div>
+
+    <!-- ConversationModule -->
+    <div class="module m-conv">
+      <div class="module-header">💬 ConversationModule</div>
+      <div class="module-body">
+        <span class="chip chip-controller"><span class="chip-dot dot-controller"></span>ConversationController</span>
+        <span class="chip chip-abstract" style="font-size:8.5px;padding:2px 6px;"><span class="chip-dot dot-abstract"></span>GET / &nbsp;·&nbsp; GET /:id &nbsp;·&nbsp; POST / &nbsp;·&nbsp; PATCH /:id/title &nbsp;·&nbsp; activate &nbsp;·&nbsp; archive</span>
+        <span class="chip chip-service"><span class="chip-dot dot-service"></span>ConversationService</span>
+        <span class="chip chip-model"><span class="chip-dot dot-model"></span>Conversation · CreateConversationRequest</span>
+      </div>
+    </div>
+
+    <!-- MessageModule -->
+    <div class="module m-msg">
+      <div class="module-header">✉️ MessageModule</div>
+      <div class="module-body">
+        <span class="chip chip-controller"><span class="chip-dot dot-controller"></span>MessageController</span>
+        <span class="chip chip-abstract" style="font-size:8.5px;padding:2px 6px;"><span class="chip-dot dot-abstract"></span>GET /conversations/:id/messages &nbsp;·&nbsp; POST &nbsp;·&nbsp; DELETE /:msgId</span>
+        <span class="chip chip-service"><span class="chip-dot dot-service"></span>MessageService &nbsp;<em style="font-weight:400;color:#555">(+ mock reply)</em></span>
+        <span class="chip chip-model"><span class="chip-dot dot-model"></span>Message · CreateMessageResponse</span>
+      </div>
+    </div>
+
+    <!-- HealthModule -->
+    <div class="module m-health">
+      <div class="module-header">💚 HealthModule</div>
+      <div class="module-body">
+        <span class="chip chip-controller"><span class="chip-dot dot-controller"></span>HealthController &nbsp;<em style="font-weight:400;color:#555">GET /health</em></span>
+        <span class="chip chip-service"><span class="chip-dot dot-service"></span>HealthService</span>
+      </div>
+    </div>
+
+    <!-- Base abstractions -->
+    <div class="module m-nest-app">
+      <div class="module-header">🏗️ Shared / Base</div>
+      <div class="module-body">
+        <span class="chip chip-abstract"><span class="chip-dot dot-abstract"></span>AbstractController &nbsp;<em style="font-weight:400;color:#555">(createOkResponse)</em></span>
+        <span class="chip chip-abstract"><span class="chip-dot dot-abstract"></span>ResponseBuilder</span>
+        <span class="chip chip-model"><span class="chip-dot dot-model"></span>ResponseObject · ResponseMessage</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Leyenda -->
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#1565c0"></div> Component</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#2e7d32"></div> Service</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#880e4f"></div> Controller</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#6a1b9a"></div> Route</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#f57f17"></div> Model / Interface</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#455a64"></div> Abstracto / Shared</div>
+</div>
+
+</body>
+</html>
