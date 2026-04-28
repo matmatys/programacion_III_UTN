@@ -1,0 +1,39 @@
+<main class="login-page">
+  <section class="login-card">
+    <header class="brand-block">
+      <img src="assets/utnito-logo.svg" alt="UTNito logo" class="brand-logo" />
+      <h1>Welcome to UTNito</h1>
+      <p class="subtitle">Sign in to chat with <strong>UTNito</strong>.</p>
+    </header>
+
+    <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+      <label for="username">Username</label>
+      <input
+        id="username"
+        formControlName="username"
+        type="text"
+        placeholder="e.g. carlos.gardel"
+      />
+      <p class="error-text" [hidden]="!showUsernameRequired">Username is required.</p>
+      <p class="error-text" [hidden]="!showUsernameMinLength">Username must have at least 3 characters.</p>
+
+      <label for="password">Password</label>
+      <input
+        id="password"
+        formControlName="password"
+        type="password"
+        placeholder="Enter your password"
+      />
+      <p class="error-text" [hidden]="!showPasswordRequired">Password is required.</p>
+
+      <p class="error-text" [hidden]="!formMessage">{{ formMessage }}</p>
+
+      <button type="submit">Login</button>
+    </form>
+
+    <footer class="login-footer">
+      <p class="program-name">UTN Programacion III</p>
+      <p>Academic prototype for educational use.</p>
+    </footer>
+  </section>
+</main>
