@@ -16,9 +16,6 @@ export class ChatComponent implements OnInit {
   // Exposed to template for role-based message styles.
   readonly messageRole = MessageRole;
 
-  // UI feedback for the manual refresh token action.
-  refreshMessage = '';
-
   constructor(
     private readonly router: Router,
     private readonly authService: AuthService,
@@ -155,20 +152,6 @@ export class ChatComponent implements OnInit {
     this.chatService.sendDraftMessage().subscribe({
       error: (error: unknown) => {
         console.error('Send message failed', error);
-      },
-    });
-  }
-
-  onRefreshTokenClick(): void {
-    // Calls refresh endpoint and updates UI with simple status text.
-    this.refreshMessage = '';
-
-    this.authService.refreshAccessToken().subscribe({
-      next: (ok) => {
-        this.refreshMessage = ok ? 'Access token refreshed.' : 'Could not refresh token.';
-      },
-      error: () => {
-        this.refreshMessage = 'Could not refresh token.';
       },
     });
   }

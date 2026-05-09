@@ -24,5 +24,5 @@ Nota:
 - Todavia no hacemos refresh automatico al recibir `401`.
 
 ### Cierre
-Con este paso queda completo el flujo frontend JWT:
-- login -> token storage -> rutas protegidas -> refresh.
+Con este paso queda listo el refresh manual en UI.
+En el Step 3 agregamos refresh automatico previo a request protegida (pre-check en interceptor).

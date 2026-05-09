@@ -10,6 +10,7 @@
 - [ ] Interceptor agrega `Authorization: Bearer ...`.
 - [ ] Ruta `/chat` protegida por guard.
 - [ ] Boton de refresh token actualiza access token.
+- [ ] Interceptor hace pre-check de expiracion y refresh automatico antes de request protegida.
 
 ## Conceptos
 - [ ] Frontend no guarda password luego del login.

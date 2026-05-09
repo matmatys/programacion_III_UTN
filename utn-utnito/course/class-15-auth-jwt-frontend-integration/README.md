@@ -18,6 +18,7 @@ Integrar JWT en frontend usando el backend ya preparado en clase 14:
 - `frontend/c15-chat-app-start`: frontend base.
 - `steps/step-1`: login JWT + token storage + guard + interceptor + `/auth/me`.
 - `steps/step-2`: accion manual de refresh token desde UI.
+- `steps/step-3`: pre-check de expiracion en interceptor + refresh automatico previo a request protegida.
 - `frontend/c15-chat-app-end`: frontend final.
 
 ### Como ejecutar
@@ -37,7 +38,7 @@ Integrar JWT en frontend usando el backend ya preparado en clase 14:
 - password: `123456`
 
 ### Nota
-En esta clase no profundizamos manejo robusto de errores UI ni refresh automatico en interceptor. Foco: integracion JWT frontend-backend.
+En esta clase no profundizamos manejo robusto de errores UI ni reintento automatico post-`401`. Foco: integracion JWT frontend-backend.
 
 ### Aclaracion importante del estado start
 En `frontend/c15-chat-app-start`, el flujo de login JWT contra backend no esta completo todavia.
@@ -63,6 +64,7 @@ Integrate JWT in frontend using the backend already prepared in class 14:
 - `frontend/c15-chat-app-start`: frontend baseline.
 - `steps/step-1`: JWT login + token storage + guard + interceptor + `/auth/me`.
 - `steps/step-2`: manual refresh-token action from UI.
+- `steps/step-3`: interceptor expiration pre-check + automatic refresh before protected requests.
 - `frontend/c15-chat-app-end`: final frontend state.
 
 ### Run

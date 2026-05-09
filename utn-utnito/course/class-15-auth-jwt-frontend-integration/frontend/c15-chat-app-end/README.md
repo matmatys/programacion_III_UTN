@@ -7,7 +7,8 @@ Includes:
 - token storage in `sessionStorage`,
 - Bearer interceptor,
 - route guard for `/chat`,
-- manual refresh token action.
+- manual refresh token action,
+- interceptor pre-check with automatic refresh before protected requests.
 
 Path: `course/class-15-auth-jwt-frontend-integration/frontend/c15-chat-app-end`
 

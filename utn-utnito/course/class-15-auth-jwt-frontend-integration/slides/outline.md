@@ -15,10 +15,15 @@
 - Boton de refresh token en UI.
 - Llamada a `/auth/refresh-token` y reemplazo de access token.
 
-5. Demo
+5. Step 3
+- Pre-check de expiracion en interceptor.
+- Refresh automatico previo a request protegida.
+
+6. Demo
 - Login correcto.
 - Persistencia de sesion en refresh de pagina.
 - Refresh manual desde sidebar.
+- Refresh automatico en interceptor al detectar token vencido.
 
-6. Cierre
+7. Cierre
 - Flujo JWT completo backend + frontend listo.
