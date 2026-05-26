@@ -1,0 +1,4 @@
+**/package-lock.json
+**/database/*.db
+**/database/*.sqlite
+**/database/*.sqlite3
