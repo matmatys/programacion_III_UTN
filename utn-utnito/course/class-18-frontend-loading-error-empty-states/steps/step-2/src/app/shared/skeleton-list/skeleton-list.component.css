@@ -1,0 +1,27 @@
+.skeleton-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.skeleton-item {
+  padding: 10px 5px;
+}
+
+.skeleton-bar {
+  display: block;
+  height: 14px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #2a2d35 0%, #3a3e4a 50%, #2a2d35 100%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.2s infinite linear;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

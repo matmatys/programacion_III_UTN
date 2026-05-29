@@ -1,0 +1,11 @@
+<div class="error-state">
+  <p class="error-state-message">{{ message }}</p>
+  <button
+    *ngIf="retryLabel"
+    type="button"
+    class="error-state-retry"
+    (click)="retry.emit()"
+  >
+    {{ retryLabel }}
+  </button>
+</div>

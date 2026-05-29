@@ -1,0 +1,29 @@
+.error-state {
+  padding: 16px 12px;
+  border: 1px solid #6b3a40;
+  border-radius: 10px;
+  background-color: #2c1f23;
+  text-align: center;
+}
+
+.error-state-message {
+  margin: 0 0 12px;
+  color: #f0b4ba;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.error-state-retry {
+  border: 1px solid #5a4044;
+  border-radius: 8px;
+  background-color: #cf5f6f;
+  color: #ffffff;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.error-state-retry:hover {
+  background-color: #de6f7f;
+}

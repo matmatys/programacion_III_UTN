@@ -1,0 +1,26 @@
+.empty-state {
+  padding: 18px 12px;
+  text-align: center;
+}
+
+.empty-state-message {
+  margin: 0 0 12px;
+  color: #9aa1af;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.empty-state-action {
+  border: 1px solid #434752;
+  border-radius: 8px;
+  background-color: #2a8f74;
+  color: #ffffff;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.empty-state-action:hover {
+  background-color: #34a386;
+}

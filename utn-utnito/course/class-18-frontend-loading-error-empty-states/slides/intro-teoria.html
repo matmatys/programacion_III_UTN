@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clase 18 · Intro teórica · Frontend · loading, errores y vacíos</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #f0f2f5;
+    color: #1a1a2e;
+    line-height: 1.45;
+  }
+
+  /* ── DECK / SLIDES ── */
+  .deck { position: relative; width: 100vw; height: 100vh; }
+  .slide {
+    position: absolute; inset: 0;
+    padding: 64px 96px 80px;
+    display: none;
+    flex-direction: column;
+    background: #fafafa;
+    overflow: hidden;
+  }
+  .slide.active { display: flex; }
+
+  /* ── HEADER / TITLE ── */
+  .eyebrow {
+    font-size: 13px;
+    font-weight: 600;
+    color: #dd0031;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  h1 {
+    font-size: 56px;
+    font-weight: 700;
+    color: #1a1a2e;
+    letter-spacing: -0.5px;
+    line-height: 1.05;
+    margin-bottom: 16px;
+  }
+  h2 {
+    font-size: 38px;
+    font-weight: 700;
+    color: #1a1a2e;
+    letter-spacing: -0.3px;
+    line-height: 1.1;
+    margin-bottom: 28px;
+  }
+  h3 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #1a1a2e;
+    margin-bottom: 12px;
+  }
+  .lead {
+    font-size: 22px;
+    color: #444;
+    max-width: 900px;
+    margin-bottom: 24px;
+  }
+  p, li { font-size: 18px; color: #333; }
+  ul { padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  em { color: #555; font-style: italic; }
+  strong { color: #1a1a2e; }
+  .en { color: #888; font-style: italic; font-weight: 400; font-size: 0.85em; }
+
+  /* ── FOOTER ── */
+  .footer {
+    position: absolute;
+    bottom: 24px;
+    left: 96px;
+    right: 96px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #888;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .footer .counter { font-weight: 600; color: #dd0031; }
+
+  /* ── COVER ── */
+  .cover { justify-content: center; align-items: flex-start; }
+  .cover h1 { font-size: 72px; max-width: 1000px; }
+  .cover .subtitle {
+    font-size: 26px;
+    color: #555;
+    margin-top: 8px;
+    font-weight: 400;
+  }
+  .cover .badge {
+    display: inline-block;
+    margin-top: 40px;
+    padding: 8px 16px;
+    background: #1a1a2e;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── BOXES / PANELS ── */
+  .row {
+    display: flex;
+    gap: 24px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .col { flex: 1; min-width: 0; }
+
+  .card {
+    background: white;
+    border: 2px solid #e0e4e9;
+    border-radius: 12px;
+    padding: 20px 22px;
+  }
+  .card.accent { border-color: #dd0031; }
+  .card.accent .card-title { color: #dd0031; }
+  .card.dark {
+    background: #1a1a2e;
+    border-color: #1a1a2e;
+    color: #fff;
+  }
+  .card.dark .card-title { color: #fff; }
+  .card.dark p, .card.dark li { color: #d8d8e0; }
+  .card.dark strong { color: #fff; }
+  .card-title {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: #1a1a2e;
+    margin-bottom: 10px;
+  }
+
+  /* ── FLOW DIAGRAM ── */
+  .flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin: 28px 0;
+  }
+  .flow .node {
+    background: white;
+    border: 2px solid #1a1a2e;
+    border-radius: 12px;
+    padding: 18px 26px;
+    min-width: 160px;
+    text-align: center;
+  }
+  .flow .node.db { border-color: #dd0031; }
+  .flow .node .node-title { font-size: 16px; font-weight: 700; color: #1a1a2e; }
+  .flow .node .node-sub   { font-size: 12px; color: #888; margin-top: 4px; }
+  .flow .arrow {
+    font-size: 28px;
+    color: #1a1a2e;
+    font-weight: 300;
+  }
+
+  /* ── CODE ── */
+  pre {
+    background: #1e1e2e;
+    color: #f8f8f2;
+    padding: 16px 18px;
+    border-radius: 8px;
+    font-family: 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 14px;
+    line-height: 1.55;
+    overflow: auto;
+    margin-top: 8px;
+  }
+  .kw     { color: #ff79c6; }
+  .deco   { color: #50fa7b; }
+  .str    { color: #f1fa8c; }
+  .typ    { color: #8be9fd; }
+  .com    { color: #6272a4; font-style: italic; }
+  .fn     { color: #ffb86c; }
+  .tag    { color: #ff79c6; }
+  .attr   { color: #50fa7b; }
+
+  /* ── COMPARISON GRID ── */
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-top: 10px;
+  }
+  .compare .pane {
+    background: white;
+    border: 2px solid #e0e4e9;
+    border-radius: 12px;
+    padding: 20px 22px;
+  }
+  .compare .pane.a { border-color: #dd0031; }
+  .compare .pane.b { border-color: #1a1a2e; }
+  .compare .pane h3 { font-size: 20px; margin-bottom: 8px; }
+  .compare .pane .label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .compare .pane.a .label { color: #dd0031; }
+  .compare .pane.b .label { color: #1a1a2e; }
+
+  /* ── CLICK ZONES ── */
+  .nav-zone {
+    position: fixed;
+    top: 0; bottom: 0;
+    width: 15%;
+    cursor: pointer;
+    z-index: 5;
+    background: transparent;
+  }
+  .nav-zone.left  { left: 0; }
+  .nav-zone.right { right: 0; }
+
+  /* ── BRIDGE / CLOSING ── */
+  .bridge {
+    margin-top: auto;
+    padding: 18px 22px;
+    background: #1a1a2e;
+    color: white;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 500;
+  }
+  .bridge .arrow { color: #dd0031; font-weight: 700; }
+  .bridge strong { color: #fff; }
+
+  /* ── PRINT ── */
+  @media print {
+    html, body { height: auto; overflow: visible; }
+    .deck { height: auto; }
+    .slide {
+      position: relative;
+      display: flex !important;
+      page-break-after: always;
+      height: 100vh;
+      inset: auto;
+    }
+    .nav-zone { display: none; }
+  }
+
+  /* ── RESPONSIVE FALLBACK ── */
+  @media (max-width: 1100px) {
+    .slide { padding: 40px 56px 64px; }
+    h1 { font-size: 44px; }
+    .cover h1 { font-size: 56px; }
+    h2 { font-size: 30px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="deck">
+
+  <!-- ── SLIDE 1: PORTADA ── -->
+  <section class="slide cover active" data-step="1">
+    <div class="eyebrow">Clase 18 · Intro teórica</div>
+    <h1>Más allá del happy path</h1>
+    <div class="subtitle">Estados de UI · loading, errores y vacíos en el frontend</div>
+    <div class="badge">UTN · Programación III</div>
+    <div class="footer">
+      <span>Frontend · estados de UI</span>
+      <span class="counter">1 / 6</span>
+    </div>
+  </section>
+
+  <!-- ── SLIDE 2: EL PROBLEMA + LOS CUATRO ESTADOS ── -->
+  <section class="slide" data-step="2">
+    <div class="eyebrow">El punto de partida</div>
+    <h2>Una vista, cuatro estados posibles</h2>
+    <p class="lead">Cuando programamos una pantalla que muestra datos, pensamos: <em>"muestro la lista"</em>. Pero esa vista es <strong>asincrónica</strong>: pide datos a una API, espera, y algo termina pasando. Hay <strong>al menos cuatro escenarios distintos</strong>, y solo uno es "todo salió bien".</p>
+
+    <div class="row">
+      <div class="card col">
+        <div class="card-title">Loading</div>
+        <p>Pedimos los datos y estamos <strong>esperando</strong>. El usuario no sabe si tarda, si la app se colgó, o si su click se registró.</p>
+      </div>
+      <div class="card col accent">
+        <div class="card-title">Success · happy path</div>
+        <p>Los datos llegaron y los mostramos. <em>Lo único en lo que pensamos por defecto</em>, y por eso el resto suele quedar roto.</p>
+      </div>
+      <div class="card col">
+        <div class="card-title">Empty</div>
+        <p>La respuesta llegó <strong>vacía</strong>. ¿Por qué? ¿Es la primera vez? ¿Filtró algo? ¿Hay un bug?</p>
+      </div>
+      <div class="card col">
+        <div class="card-title">Error</div>
+        <p>Algo <strong>falló</strong>: red caída, servidor que devolvió 500, sesión expirada. El usuario necesita saber qué pasó.</p>
+      </div>
+    </div>
+
+    <div class="bridge">
+      <span class="arrow">→</span> Si solo manejamos el happy path, los <strong>otros tres</strong> se ven como una <strong>pantalla en blanco</strong>. Hoy los volvemos explícitos.
+    </div>
+
+    <div class="footer">
+      <span>Frontend · estados de UI</span>
+      <span class="counter">2 / 6</span>
+    </div>
+  </section>
+
+  <!-- ── SLIDE 3: LOADING ── -->
+  <section class="slide" data-step="3">
+    <div class="eyebrow">Estado 1 · Loading</div>
+    <h2>El usuario tiene que saber que algo está pasando</h2>
+    <p class="lead">Sin feedback visual, el usuario se pregunta si la app se colgó, si su click no se registró, o si ya terminó y no pasa nada. Cualquier de esas tres dudas lo lleva a <strong>recargar, reintentar, o irse</strong>. Un buen estado de loading evita las tres.</p>
+
+    <div class="compare">
+      <div class="pane a">
+        <div class="label">Spinner</div>
+        <h3>"Algo está pasando"</h3>
+        <ul>
+          <li>Indicador genérico: un círculo que gira.</li>
+          <li>Comunica <strong>actividad</strong>, no qué viene.</li>
+          <li>Bueno para acciones puntuales: enviar un form, login, guardar.</li>
+          <li>Tapa toda la pantalla (overlay) cuando bloquea la interacción.</li>
+        </ul>
+      </div>
+      <div class="pane b">
+        <div class="label">Skeleton</div>
+        <h3>"Esto es lo que va a aparecer"</h3>
+        <ul>
+          <li>Placeholder con la <strong>forma</strong> del contenido futuro (cajas grises).</li>
+          <li>Reduce la sensación de espera: el usuario ya entiende qué esperar.</li>
+          <li>Bueno para listas, cards, dashboards.</li>
+          <li>Mantiene el layout estable (no hay "saltos" cuando llegan los datos).</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="bridge">
+      <span class="arrow">→</span> Detalle útil: si la operación dura <strong>menos de ~300ms</strong>, mostrar loading <em>empeora</em> la experiencia (flicker). Conviene esperar antes de mostrarlo.
+    </div>
+
+    <div class="footer">
+      <span>Frontend · estados de UI</span>
+      <span class="counter">3 / 6</span>
+    </div>
+  </section>
+
+  <!-- ── SLIDE 4: ERROR ── -->
+  <section class="slide" data-step="4">
+    <div class="eyebrow">Estado 2 · Error</div>
+    <h2>Cuando algo falla, no dejes al usuario en silencio</h2>
+    <p class="lead">Una pantalla en blanco frente a un error es de lo peor que puede pasar. El usuario no sabe <strong>si es él, si es la app, o qué hacer</strong>. Un buen estado de error <strong>explica qué pasó</strong> en lenguaje humano y <strong>ofrece una salida</strong>.</p>
+
+    <div class="row">
+      <div class="card col accent">
+        <div class="card-title">Qué mostrar</div>
+        <ul>
+          <li><strong>Mensaje claro</strong>, sin jerga técnica ("Algo falló cargando tus conversaciones").</li>
+          <li><strong>Una acción</strong>: reintentar, recargar, volver al inicio.</li>
+          <li>Si tiene sentido, <strong>distinguir el tipo</strong>: red caída (offline), permisos (403), no existe (404), server (500).</li>
+          <li>Mantener la app navegable: el usuario debería poder irse a otra parte.</li>
+        </ul>
+      </div>
+      <div class="card col dark">
+        <div class="card-title">Qué no hacer</div>
+        <ul>
+          <li>Mostrar el <code>stack trace</code> o un <code>[object Object]</code>.</li>
+          <li>Dejar la pantalla <strong>en blanco</strong> o congelada.</li>
+          <li>Avisar con un <code>alert()</code> que rompe el flujo.</li>
+          <li>Culpar al usuario por algo que no es su problema (un 500 nunca es culpa suya).</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="bridge">
+      <span class="arrow">→</span> Regla de oro: el usuario tiene que <strong>poder seguir usando la app</strong> aunque una parte haya fallado. Un error no es el fin del mundo, es <em>una parte</em> del mundo.
+    </div>
+
+    <div class="footer">
+      <span>Frontend · estados de UI</span>
+      <span class="counter">4 / 6</span>
+    </div>
+  </section>
+
+  <!-- ── SLIDE 5: EMPTY ── -->
+  <section class="slide" data-step="5">
+    <div class="eyebrow">Estado 3 · Vacío</div>
+    <h2>"Vacío" no significa lo mismo en todos los casos</h2>
+    <p class="lead">Es el estado más olvidado. <em>"No hay datos"</em> parece autoexplicativo, pero hay <strong>tres razones distintas</strong> para estar vacío, y cada una pide un mensaje y una acción distintos. Confundirlas hace que el usuario piense que la app está rota.</p>
+
+    <div class="row">
+      <div class="card col">
+        <div class="card-title">1 · Vacío inicial</div>
+        <p>El usuario nunca creó datos. Es <strong>la primera vez</strong>.</p>
+        <p style="margin-top:8px;color:#555;font-size:15px;"><em>Oportunidad de onboarding:</em></p>
+        <p style="margin-top:4px;font-size:15px;"><strong>"Todavía no tenés conversaciones. Empezá la primera."</strong> + botón.</p>
+      </div>
+      <div class="card col">
+        <div class="card-title">2 · Vacío por filtro</div>
+        <p>El usuario <strong>tiene datos</strong>, pero el filtro/búsqueda actual no devuelve nada.</p>
+        <p style="margin-top:8px;color:#555;font-size:15px;"><em>La acción es relajar el filtro:</em></p>
+        <p style="margin-top:4px;font-size:15px;"><strong>"Ninguna conversación coincide con 'foo'."</strong> + opción de limpiar.</p>
+      </div>
+      <div class="card col">
+        <div class="card-title">3 · Vacío por eliminación</div>
+        <p>Tenía datos, los borró a todos. <strong>Es un estado momentáneo</strong>.</p>
+        <p style="margin-top:8px;color:#555;font-size:15px;"><em>La acción es deshacer o crear:</em></p>
+        <p style="margin-top:4px;font-size:15px;"><strong>"Vaciaste todo. ¿Querés crear una nueva?"</strong></p>
+      </div>
+    </div>
+
+    <div class="bridge">
+      <span class="arrow">→</span> El vacío es la <strong>mejor oportunidad para guiar al usuario</strong>: es exactamente cuando no sabe qué hacer.
+    </div>
+
+    <div class="footer">
+      <span>Frontend · estados de UI</span>
+      <span class="counter">5 / 6</span>
+    </div>
+  </section>
+
+  <!-- ── SLIDE 6: CIERRE / PRÁCTICA ── -->
+  <section class="slide" data-step="6">
+    <div class="eyebrow">Para cerrar · práctica</div>
+    <h2>Lo aplicamos al chat</h2>
+    <p class="lead">Vamos a tomar la <strong>lista de conversaciones del chat</strong> y le vamos a agregar el manejo explícito de los tres estados. Hoy esa vista solo muestra el happy path: si carga, no se nota; si falla, queda en blanco; si está vacía, no dice nada. Vamos a arreglarlo.</p>
+
+    <div class="row">
+      <div class="col" style="flex: 1.3;">
+<pre><span class="com">// patron: cada estado con su *ngIf</span>
+<span class="tag">&lt;app-skeleton-list</span> <span class="attr">*ngIf</span>=<span class="str">"loading"</span><span class="tag">&gt;&lt;/app-skeleton-list&gt;</span>
+
+<span class="tag">&lt;app-error-state</span>
+  <span class="attr">*ngIf</span>=<span class="str">"!loading &amp;&amp; error"</span>
+  <span class="attr">[error]</span>=<span class="str">"error"</span>
+  <span class="attr">(retry)</span>=<span class="str">"reload()"</span>
+<span class="tag">&gt;&lt;/app-error-state&gt;</span>
+
+<span class="tag">&lt;app-empty-state</span> <span class="attr">*ngIf</span>=<span class="str">"!loading &amp;&amp; !error &amp;&amp; !conversations.length"</span><span class="tag">&gt;</span>
+  Todavía no tenés conversaciones.
+  <span class="tag">&lt;button</span> <span class="attr">(click)</span>=<span class="str">"crear()"</span><span class="tag">&gt;</span>Crear la primera<span class="tag">&lt;/button&gt;</span>
+<span class="tag">&lt;/app-empty-state&gt;</span>
+
+<span class="tag">&lt;app-conversation-list</span>
+  <span class="attr">*ngIf</span>=<span class="str">"!loading &amp;&amp; !error &amp;&amp; conversations.length"</span>
+  <span class="attr">[items]</span>=<span class="str">"conversations"</span>
+<span class="tag">&gt;&lt;/app-conversation-list&gt;</span></pre>
+      </div>
+
+      <div class="col">
+        <h3>Lo que vamos a hacer</h3>
+        <ul>
+          <li>Modelar los <strong>tres estados</strong> con flags privados en el service.</li>
+          <li>Manejarlos en el template con <code>*ngIf</code> y <code>&lt;ng-container&gt;</code> anidados.</li>
+          <li>Crear componentes reutilizables: <code>skeleton-list</code>, <code>error-state</code>, <code>empty-state</code>.</li>
+          <li>Probarlo cortando la API a propósito (DevTools → offline) para ver cada estado.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="bridge">
+      <span class="arrow">→</span> Después de hoy, <strong>ninguna vista nuestra vuelve a tener una pantalla blanca</strong> esperando que el usuario adivine qué pasó.
+    </div>
+
+    <div class="footer">
+      <span>Frontend · estados de UI</span>
+      <span class="counter">6 / 6</span>
+    </div>
+  </section>
+
+</div>
+
+<div class="nav-zone left"  onclick="prevSlide()"></div>
+<div class="nav-zone right" onclick="nextSlide()"></div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  let current = 0;
+
+  function show(i) {
+    if (i < 0 || i >= slides.length) return;
+    slides[current].classList.remove('active');
+    current = i;
+    slides[current].classList.add('active');
+    history.replaceState(null, '', '#' + (current + 1));
+  }
+  function nextSlide() { show(current + 1); }
+  function prevSlide() { show(current - 1); }
+
+  document.addEventListener('keydown', (e) => {
+    switch (e.key) {
+      case 'ArrowRight':
+      case 'PageDown':
+      case ' ':
+        e.preventDefault();
+        nextSlide();
+        break;
+      case 'ArrowLeft':
+      case 'PageUp':
+        e.preventDefault();
+        prevSlide();
+        break;
+      case 'Home':
+        e.preventDefault();
+        show(0);
+        break;
+      case 'End':
+        e.preventDefault();
+        show(slides.length - 1);
+        break;
+    }
+  });
+
+  // Deep-link por hash (#1, #2, ...)
+  const hash = parseInt(location.hash.slice(1), 10);
+  if (!isNaN(hash) && hash >= 1 && hash <= slides.length) show(hash - 1);
+</script>
+
+</body>
+</html>

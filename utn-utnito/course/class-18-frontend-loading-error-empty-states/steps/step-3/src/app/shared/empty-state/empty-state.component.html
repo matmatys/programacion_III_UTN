@@ -1,0 +1,11 @@
+<div class="empty-state">
+  <p class="empty-state-message">{{ message }}</p>
+  <button
+    *ngIf="actionLabel"
+    type="button"
+    class="empty-state-action"
+    (click)="action.emit()"
+  >
+    {{ actionLabel }}
+  </button>
+</div>
