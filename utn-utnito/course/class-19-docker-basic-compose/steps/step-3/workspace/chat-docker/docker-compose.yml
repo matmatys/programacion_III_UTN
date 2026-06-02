@@ -1,0 +1,51 @@
+name: utn-utnito-class-19
+
+services:
+  chat-core-service:
+    build:
+      context: ../backend/chat-core-service
+      dockerfile: Dockerfile
+    container_name: utn-utnito-class-19-chat-core-service
+    env_file:
+      - ../backend/chat-core-service/.env.docker
+    ports:
+      - "4012:3001"
+    volumes:
+      - chat-db-data:/app/database
+    networks:
+      - utn-utnito-network-class-19
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3001/health >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  chat-frontend:
+    build:
+      context: ../frontend/chat-app
+      dockerfile: Dockerfile
+    container_name: utn-utnito-class-19-chat-frontend
+    ports:
+      - "4300:80"
+    depends_on:
+      chat-core-service:
+        condition: service_healthy
+    networks:
+      - utn-utnito-network-class-19
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:80 >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  chat-db-data:
+    name: utn-utnito-class-19-chat-db-data
+
+networks:
+  utn-utnito-network-class-19:
+    name: utn-utnito-network-class-19

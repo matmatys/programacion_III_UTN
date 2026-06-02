@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>Clase 19 - Docker basico y docker-compose</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 48px;
+        color: #18202f;
+        line-height: 1.45;
+      }
+
+      h1 {
+        margin-bottom: 8px;
+      }
+
+      section {
+        margin: 28px 0;
+      }
+
+      code {
+        background: #eef1f5;
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Clase 19 - Docker basico y docker-compose</h1>
+    <p>Objetivo: empaquetar backend y frontend, y levantar el stack con Compose.</p>
+
+    <section>
+      <h2>Idea central</h2>
+      <p>Hasta ahora corriamos proyectos. Hoy empaquetamos un ambiente reproducible.</p>
+    </section>
+
+    <section>
+      <h2>Estados del stack</h2>
+      <ul>
+        <li>Backend en contenedor: <code>chat-core-service</code></li>
+        <li>Frontend en contenedor: <code>chat-frontend</code></li>
+        <li>SQLite persistido en volumen Docker</li>
+        <li>Red interna: <code>utn-utnito-network-class-19</code></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Checkpoint</h2>
+      <ul>
+        <li><code>http://localhost:4300</code> abre el frontend.</li>
+        <li><code>http://localhost:4012/api</code> abre Swagger.</li>
+        <li><code>docker compose ps</code> muestra servicios healthy.</li>
+        <li>Docker Desktop permite revisar containers y logs.</li>
+      </ul>
+    </section>
+  </body>
+</html>

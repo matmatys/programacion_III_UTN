@@ -25,6 +25,13 @@ Clases actuales:
 - [`class-10-angular-async-http`](./class-10-angular-async-http)
 - [`class-11-api-contract-swagger-first`](./class-11-api-contract-swagger-first)
 - [`class-12-backend-mock-fast-nestjs`](./class-12-backend-mock-fast-nestjs)
+- [`class-13-frontend-backend-integration`](./class-13-frontend-backend-integration)
+- [`class-14-auth-jwt`](./class-14-auth-jwt)
+- [`class-15-auth-jwt-frontend-integration`](./class-15-auth-jwt-frontend-integration)
+- [`class-16-backend-sqlite-persistence`](./class-16-backend-sqlite-persistence)
+- [`class-17-backend-config-validation-errors`](./class-17-backend-config-validation-errors)
+- [`class-18-frontend-loading-error-empty-states`](./class-18-frontend-loading-error-empty-states)
+- [`class-19-docker-basic-compose`](./class-19-docker-basic-compose)
 
 ## English
 
@@ -51,3 +58,10 @@ Current classes:
 - [`class-10-angular-async-http`](./class-10-angular-async-http)
 - [`class-11-api-contract-swagger-first`](./class-11-api-contract-swagger-first)
 - [`class-12-backend-mock-fast-nestjs`](./class-12-backend-mock-fast-nestjs)
+- [`class-13-frontend-backend-integration`](./class-13-frontend-backend-integration)
+- [`class-14-auth-jwt`](./class-14-auth-jwt)
+- [`class-15-auth-jwt-frontend-integration`](./class-15-auth-jwt-frontend-integration)
+- [`class-16-backend-sqlite-persistence`](./class-16-backend-sqlite-persistence)
+- [`class-17-backend-config-validation-errors`](./class-17-backend-config-validation-errors)
+- [`class-18-frontend-loading-error-empty-states`](./class-18-frontend-loading-error-empty-states)
+- [`class-19-docker-basic-compose`](./class-19-docker-basic-compose)

@@ -1,0 +1,19 @@
+<svg width="220" height="220" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="UTNito logo">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#cf5f6f"/>
+      <stop offset="100%" stop-color="#b95261"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="10" y="10" width="200" height="200" rx="56" fill="url(#bgGrad)"/>
+
+  <circle cx="82" cy="96" r="10" fill="#ffffff"/>
+  <circle cx="138" cy="96" r="10" fill="#ffffff"/>
+
+  <path d="M70 132c10 14 22 20 40 20s30-6 40-20" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round"/>
+
+  <rect x="44" y="48" width="132" height="8" rx="4" fill="#ffffff" opacity="0.9"/>
+
+  <text x="110" y="188" text-anchor="middle" fill="#ffffff" font-family="Space Grotesk, sans-serif" font-size="26" font-weight="700">UTNito</text>
+</svg>
