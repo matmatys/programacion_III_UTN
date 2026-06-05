@@ -32,6 +32,7 @@ Clases actuales:
 - [`class-17-backend-config-validation-errors`](./class-17-backend-config-validation-errors)
 - [`class-18-frontend-loading-error-empty-states`](./class-18-frontend-loading-error-empty-states)
 - [`class-19-docker-basic-compose`](./class-19-docker-basic-compose)
+- [`class-20-n8n-automation-ai-mock`](./class-20-n8n-automation-ai-mock)
 
 ## English
 
@@ -65,3 +66,4 @@ Current classes:
 - [`class-17-backend-config-validation-errors`](./class-17-backend-config-validation-errors)
 - [`class-18-frontend-loading-error-empty-states`](./class-18-frontend-loading-error-empty-states)
 - [`class-19-docker-basic-compose`](./class-19-docker-basic-compose)
+- [`class-20-n8n-automation-ai-mock`](./class-20-n8n-automation-ai-mock)

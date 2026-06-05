@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>Clase 20 - n8n automation AI mock</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 48px;
+        color: #18202f;
+        line-height: 1.45;
+      }
+
+      h1 {
+        margin-bottom: 8px;
+      }
+
+      section {
+        margin: 28px 0;
+      }
+
+      code {
+        background: #eef1f5;
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Clase 20 - n8n automation AI mock</h1>
+    <p>Objetivo: conectar el backend con un webhook de n8n y recibir una respuesta mock normalizada.</p>
+
+    <section>
+      <h2>Idea central</h2>
+      <p>El backend conserva el contrato del chat y delega la automatizacion a n8n.</p>
+    </section>
+
+    <section>
+      <h2>Flujo</h2>
+      <ul>
+        <li><code>MessageService</code> guarda el mensaje del usuario.</li>
+        <li><code>AiService</code> elige un provider.</li>
+        <li><code>N8nAiProvider</code> llama al webhook.</li>
+        <li>n8n responde con <code>data.assistantMessage</code>.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Checkpoint</h2>
+      <ul>
+        <li><code>http://localhost:4300</code> abre el frontend.</li>
+        <li><code>http://localhost:4012/api</code> abre Swagger.</li>
+        <li><code>http://localhost:5690</code> abre n8n.</li>
+        <li>Un mensaje del chat vuelve con respuesta mock generada por n8n.</li>
+      </ul>
+    </section>
+  </body>
+</html>
