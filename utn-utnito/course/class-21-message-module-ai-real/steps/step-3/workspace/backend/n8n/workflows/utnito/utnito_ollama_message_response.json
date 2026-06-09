@@ -1,0 +1,181 @@
+{
+  "name": "utnito_ollama_message_response",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "utnito-ollama-prompt-processing",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -640,
+        140
+      ],
+      "id": "89f25a89-3ef9-4465-b2f4-c3a53760d0b3",
+      "name": "Webhook - Ollama Prompt Processing",
+      "webhookId": "d17e4f2f-0eef-44cc-901c-cf5f7f6f3ebf"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://chat-ollama:11434/api/generate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { model: $json.body.ollamaModel || 'llama3.2', prompt: $json.body.prompt, stream: false } }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -360,
+        140
+      ],
+      "id": "4de29d9f-f508-433f-b472-7992d2db1a09",
+      "name": "HTTP Request - Ollama Generate Reply",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const rawResponse = $json?.response;\nlet parsedData = rawResponse;\n\nif (typeof rawResponse === 'string') {\n  try {\n    parsedData = JSON.parse(rawResponse);\n  } catch (_error) {\n    parsedData = rawResponse;\n  }\n}\n\nconst assistantMessage =\n  typeof parsedData === 'object' && parsedData?.assistantMessage\n    ? parsedData.assistantMessage\n    : rawResponse;\n\nif (typeof assistantMessage !== 'string' || !assistantMessage.trim()) {\n  throw new Error('assistantMessage is required');\n}\n\nreturn {\n  action: 'ollama_message_response',\n  error: false,\n  data: {\n    assistantMessage: assistantMessage.trim()\n  },\n  origin: 'n8n'\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -80,
+        40
+      ],
+      "id": "31f0bd8b-d8bc-4d97-be12-a6ed2fbd36f1",
+      "name": "Code - Format Ollama Success",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const nodeError =\n  $node[\"Code - Format Ollama Success\"]?.error ||\n  $node[\"HTTP Request - Ollama Generate Reply\"]?.error ||\n  {};\n\nconst itemError = $json?.error || {};\nconst mergedError = Object.keys(itemError).length ? itemError : nodeError;\n\nconst errorMessage = mergedError.message || 'Unknown error';\nconst errorDetails = mergedError.stack || 'No stack trace available';\n\nconst workflowId = $workflow.id || 'unknown';\nconst executionId = $execution.id || 'unknown';\nconst lastNodeExecuted = mergedError.node || 'unknown';\n\nconst inputData = $node[\"Webhook - Ollama Prompt Processing\"].json?.body || {};\n\nreturn {\n  action: 'ollama_message_response',\n  error: true,\n  data: {\n    workflowId,\n    executionId,\n    lastNodeExecuted,\n    errorMessage,\n    errorDetails,\n    timestamp: new Date().toISOString(),\n    inputData\n  },\n  origin: 'n8n'\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -80,
+        240
+      ],
+      "id": "41389f8f-e999-4747-a4f6-88b44c67d263",
+      "name": "Code - Format Ollama Error"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        180,
+        40
+      ],
+      "id": "4f599313-7b46-4f13-8de5-7f96ee481ced",
+      "name": "Respond - Ollama Success"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        180,
+        240
+      ],
+      "id": "f5d0f65e-0355-453e-9f89-f9b08f3f7788",
+      "name": "Respond - Ollama Error"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook - Ollama Prompt Processing": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request - Ollama Generate Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request - Ollama Generate Reply": {
+      "main": [
+        [
+          {
+            "node": "Code - Format Ollama Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code - Format Ollama Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Format Ollama Success": {
+      "main": [
+        [
+          {
+            "node": "Respond - Ollama Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code - Format Ollama Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Format Ollama Error": {
+      "main": [
+        [
+          {
+            "node": "Respond - Ollama Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4999636e-a0c8-49a2-9c8c-84f1138f703b",
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "id": "utnito-ollama-message-response",
+  "tags": []
+}

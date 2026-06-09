@@ -1,0 +1,80 @@
+{
+  "name": "utnito_mock_message_response",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "utnito-mock-message-response",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "4bd70218-7343-4f30-8b84-740ff4f01b87",
+      "name": "Webhook - Mock Message Response",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -520,
+        120
+      ],
+      "webhookId": "0fce350d-a436-49c7-a029-b7b5e4f72a65"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const body = $json.body || {};\nconst userMessage = String(body.userMessage || '').trim();\nconst conversationTitle = body.context?.conversationTitle || 'UTNito chat';\nconst promptReceived = Boolean(String(body.prompt || '').trim());\nconst recentMessagesCount = Array.isArray(body.recentMessages) ? body.recentMessages.length : 0;\n\nconst assistantMessage = userMessage\n  ? `Respuesta mock desde n8n para \"${conversationTitle}\". Prompt recibido: ${promptReceived ? 'si' : 'no'}. Contexto: ${recentMessagesCount} mensajes. Mensaje: ${userMessage}`\n  : 'Respuesta mock desde n8n: escribime un mensaje para poder ayudarte.';\n\nreturn {\n  action: 'mock_message_response',\n  error: false,\n  data: {\n    assistantMessage\n  },\n  origin: 'n8n'\n};"
+      },
+      "id": "93c618df-30c1-4211-8d51-02a90928786a",
+      "name": "Code - Build Mock Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -220,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "d3b150f1-93a8-47fd-a62f-0fe85064b740",
+      "name": "Respond - Mock Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        80,
+        120
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook - Mock Message Response": {
+      "main": [
+        [
+          {
+            "node": "Code - Build Mock Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Build Mock Response": {
+      "main": [
+        [
+          {
+            "node": "Respond - Mock Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

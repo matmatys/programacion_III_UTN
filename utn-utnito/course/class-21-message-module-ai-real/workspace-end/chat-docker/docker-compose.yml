@@ -1,0 +1,94 @@
+name: utn-utnito-class-21
+
+services:
+  chat-core-service:
+    build:
+      context: ../backend/chat-core-service
+      dockerfile: Dockerfile
+    container_name: utn-utnito-class-21-chat-core-service
+    env_file:
+      - ../backend/chat-core-service/.env.docker
+    ports:
+      - "4012:3001"
+    volumes:
+      - chat-db-data:/app/database
+    depends_on:
+      chat-n8n:
+        condition: service_started
+    networks:
+      - utn-utnito-network-class-21
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3001/health >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  chat-n8n:
+    image: n8nio/n8n:latest
+    container_name: utn-utnito-class-21-chat-n8n
+    env_file:
+      - ../backend/n8n/.env.docker
+    ports:
+      - "5690:5678"
+    volumes:
+      - n8n-data:/home/node/.n8n
+    networks:
+      - utn-utnito-network-class-21
+    restart: unless-stopped
+
+  chat-ollama:
+    profiles:
+      - ollama
+    build:
+      context: ../backend/ollama
+      dockerfile: Dockerfile
+    container_name: utn-utnito-class-21-chat-ollama
+    env_file:
+      - ../backend/ollama/.env.docker
+    ports:
+      - "8300:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    networks:
+      - utn-utnito-network-class-21
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "ollama list >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 20s
+
+  chat-frontend:
+    build:
+      context: ../frontend/chat-app
+      dockerfile: Dockerfile
+    container_name: utn-utnito-class-21-chat-frontend
+    ports:
+      - "4300:80"
+    depends_on:
+      chat-core-service:
+        condition: service_healthy
+    networks:
+      - utn-utnito-network-class-21
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:80 >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  chat-db-data:
+    name: utn-utnito-class-21-chat-db-data
+  n8n-data:
+    name: utn-utnito-class-21-n8n-data
+  ollama-data:
+    name: utn-utnito-class-21-ollama-data
+
+networks:
+  utn-utnito-network-class-21:
+    name: utn-utnito-network-class-21

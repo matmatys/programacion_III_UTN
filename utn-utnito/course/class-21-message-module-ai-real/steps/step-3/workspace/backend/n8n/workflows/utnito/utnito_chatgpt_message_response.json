@@ -1,0 +1,193 @@
+{
+  "name": "utnito_chatgpt_message_response",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "utnito-prompt-processing",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -640,
+        140
+      ],
+      "id": "a8d8880b-f545-4f17-9518-16be18ec6557",
+      "name": "Webhook - Prompt Processing",
+      "webhookId": "35efd9d3-ae55-4f37-81d7-2c9bf5f263d2"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ $json.body.prompt }}",
+              "role": "assistant"
+            },
+            {
+              "content": "={{ $json.body.userMessage }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -360,
+        140
+      ],
+      "id": "e1f2ee91-b976-41b1-b51e-5ea87eaebf18",
+      "name": "OpenAI - Generate Reply",
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "openAiApi": {
+          "id": "replace-with-your-openai-credential-id",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const content = $json?.message?.content;\nlet parsedData;\n\ntry {\n  parsedData = typeof content === 'string' ? JSON.parse(content) : content;\n} catch (_error) {\n  throw new Error('Invalid AI response JSON');\n}\n\nconst assistantMessage = parsedData?.assistantMessage;\n\nif (typeof assistantMessage !== 'string' || !assistantMessage.trim()) {\n  throw new Error('assistantMessage is required');\n}\n\nreturn {\n  action: 'chatGPT_message_response',\n  error: false,\n  data: {\n    assistantMessage: assistantMessage.trim()\n  },\n  origin: 'n8n'\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -80,
+        40
+      ],
+      "id": "013752f5-fcb4-4ad8-81d6-ed67352bf207",
+      "name": "Code - Format Success",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const nodeError =\n  $node[\"Code - Format Success\"]?.error ||\n  $node[\"OpenAI - Generate Reply\"]?.error ||\n  {};\n\nconst itemError = $json?.error || {};\nconst mergedError = Object.keys(itemError).length ? itemError : nodeError;\n\nconst errorMessage = mergedError.message || 'Unknown error';\nconst errorDetails = mergedError.stack || 'No stack trace available';\n\nconst workflowId = $workflow.id || 'unknown';\nconst executionId = $execution.id || 'unknown';\nconst lastNodeExecuted = mergedError.node || 'unknown';\n\nconst inputData = $node[\"Webhook - Prompt Processing\"].json?.body || {};\n\nreturn {\n  action: 'chatGPT_message_response',\n  error: true,\n  data: {\n    workflowId,\n    executionId,\n    lastNodeExecuted,\n    errorMessage,\n    errorDetails,\n    timestamp: new Date().toISOString(),\n    inputData\n  },\n  origin: 'n8n'\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -80,
+        240
+      ],
+      "id": "91a52032-8369-493b-abf4-41f7d4a4f9f7",
+      "name": "Code - Format Error"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        180,
+        40
+      ],
+      "id": "8d5eeb1f-1c58-4498-b4b0-e9f3ba0dbb2d",
+      "name": "Respond - Success"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        180,
+        240
+      ],
+      "id": "13b5dc4d-7119-4781-8025-64dd6c8d15e0",
+      "name": "Respond - Error"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook - Prompt Processing": {
+      "main": [
+        [
+          {
+            "node": "OpenAI - Generate Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI - Generate Reply": {
+      "main": [
+        [
+          {
+            "node": "Code - Format Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code - Format Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Format Success": {
+      "main": [
+        [
+          {
+            "node": "Respond - Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code - Format Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Format Error": {
+      "main": [
+        [
+          {
+            "node": "Respond - Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d9b35c76-c877-4ee3-abf1-5ff3f80f9366",
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "id": "utnito-chatgpt-message-response",
+  "tags": []
+}

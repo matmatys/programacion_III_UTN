@@ -33,6 +33,7 @@ Clases actuales:
 - [`class-18-frontend-loading-error-empty-states`](./class-18-frontend-loading-error-empty-states)
 - [`class-19-docker-basic-compose`](./class-19-docker-basic-compose)
 - [`class-20-n8n-automation-ai-mock`](./class-20-n8n-automation-ai-mock)
+- [`class-21-message-module-ai-real`](./class-21-message-module-ai-real)
 
 ## English
 
@@ -67,3 +68,4 @@ Current classes:
 - [`class-18-frontend-loading-error-empty-states`](./class-18-frontend-loading-error-empty-states)
 - [`class-19-docker-basic-compose`](./class-19-docker-basic-compose)
 - [`class-20-n8n-automation-ai-mock`](./class-20-n8n-automation-ai-mock)
+- [`class-21-message-module-ai-real`](./class-21-message-module-ai-real)

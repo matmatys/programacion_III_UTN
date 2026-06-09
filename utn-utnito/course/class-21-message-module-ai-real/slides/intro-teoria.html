@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>Clase 21 - Message module + AI real</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 48px;
+        color: #18202f;
+        line-height: 1.45;
+      }
+
+      h1 {
+        margin-bottom: 8px;
+      }
+
+      section {
+        margin: 28px 0;
+        max-width: 960px;
+      }
+
+      .slide-title {
+        border-top: 1px solid #d9dee8;
+        padding-top: 28px;
+        margin-top: 44px;
+      }
+
+      code {
+        background: #eef1f5;
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Clase 21 - Message module + AI real</h1>
+    <p>Objetivo: conectar el flujo de mensajes con AI real via n8n y mantener fallback a mock.</p>
+
+    <section class="slide-title">
+      <h2>Conceptos teoricos de la clase</h2>
+    </section>
+
+    <section>
+      <h2>🧠 ¿Qué es un LLM?</h2>
+      <p>Un LLM (Large Language Model) es un modelo de inteligencia artificial entrenado con enormes cantidades de texto.</p>
+      <p>Aprende patrones del lenguaje y puede generar respuestas similares a las de una persona.</p>
+      <p>No busca respuestas en Internet por defecto ni "piensa" como un humano.</p>
+      <p>Predice cuál es la siguiente palabra más probable según el contexto recibido.</p>
+    </section>
+
+    <section>
+      <h2>🔬 ¿Cómo se descubrieron?</h2>
+      <p>Los investigadores intentaban mejorar sistemas de procesamiento de lenguaje natural desde hace décadas.</p>
+      <p>Un gran avance llegó con la arquitectura Transformer presentada por Google en 2017.</p>
+      <p>Se descubrió que entrenando modelos cada vez más grandes sobre grandes volúmenes de texto aparecían nuevas capacidades.</p>
+      <p>De ahí nacieron modelos como GPT, Claude, Gemini y Llama.</p>
+    </section>
+
+    <section>
+      <h2>⚙️ ¿Cómo funcionan?</h2>
+      <p>Reciben texto de entrada y lo transforman en números llamados tokens.</p>
+      <p>Analizan las relaciones entre esos tokens utilizando una red neuronal enorme.</p>
+      <p>Luego generan una respuesta prediciendo token por token hasta completar el texto.</p>
+      <p>No almacenan conversaciones permanentemente; trabajan sobre el contexto que reciben en cada petición.</p>
+    </section>
+
+    <section>
+      <h2>📝 ¿Qué es un Prompt?</h2>
+      <p>El prompt es la instrucción que enviamos al modelo para pedir una respuesta.</p>
+      <p>Puede contener preguntas, reglas, personalidad o formato esperado.</p>
+      <p>La calidad del prompt influye mucho en la calidad de la respuesta.</p>
+      <p>Es la forma principal de comunicarnos con un modelo de IA.</p>
+    </section>
+
+    <section>
+      <h2>📚 ¿Qué es el Contexto?</h2>
+      <p>El contexto es toda la información adicional que acompaña al prompt.</p>
+      <p>Puede incluir mensajes anteriores, datos del usuario o información del sistema.</p>
+      <p>Le permite al modelo responder teniendo en cuenta la conversación actual.</p>
+      <p>Sin contexto, cada mensaje sería interpretado como una consulta aislada.</p>
+    </section>
+
+    <section>
+      <h2>🤖 ¿Cómo lo usamos en nuestra clase?</h2>
+      <p>Nuestro backend construye un prompt y agrega contexto reciente de la conversación.</p>
+      <p>Luego envía esa información a n8n mediante un contrato HTTP definido.</p>
+      <p>n8n llama al proveedor configurado (ChatGPT u Ollama) y obtiene la respuesta.</p>
+      <p>Finalmente el backend devuelve la respuesta al frontend manteniendo siempre el mismo contrato de API.</p>
+    </section>
+
+    <section class="slide-title">
+      <h2>Conceptos prácticos de la clase</h2>
+    </section>
+
+    <section>
+      <h2>Idea central</h2>
+      <p>El backend arma prompt y contexto; n8n orquesta el proveedor AI; el modulo de mensajes conserva el contrato.</p>
+    </section>
+
+    <section>
+      <h2>Flujo</h2>
+      <ul>
+        <li><code>MessageService</code> guarda el mensaje y arma contexto reciente.</li>
+        <li><code>AiService</code> elige entre <code>mock</code>, <code>chatgpt</code> y <code>ollama</code>.</li>
+        <li>n8n llama OpenAI u Ollama segun el workflow importado.</li>
+        <li>El backend espera siempre <code>data.assistantMessage</code>.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Checkpoint</h2>
+      <ul>
+        <li><code>http://localhost:4300</code> abre el frontend.</li>
+        <li><code>http://localhost:4012/api</code> abre Swagger.</li>
+        <li><code>http://localhost:5690</code> abre n8n.</li>
+        <li>Un mensaje del chat vuelve con respuesta AI real.</li>
+        <li>Al fallar el provider, el backend responde con mock controlado.</li>
+      </ul>
+    </section>
+  </body>
+</html>
