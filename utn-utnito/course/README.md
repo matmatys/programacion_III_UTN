@@ -34,6 +34,7 @@ Clases actuales:
 - [`class-19-docker-basic-compose`](./class-19-docker-basic-compose)
 - [`class-20-n8n-automation-ai-mock`](./class-20-n8n-automation-ai-mock)
 - [`class-21-message-module-ai-real`](./class-21-message-module-ai-real)
+- [`class-22-final-practice-review`](./class-22-final-practice-review)
 
 ## English
 
@@ -69,3 +70,4 @@ Current classes:
 - [`class-19-docker-basic-compose`](./class-19-docker-basic-compose)
 - [`class-20-n8n-automation-ai-mock`](./class-20-n8n-automation-ai-mock)
 - [`class-21-message-module-ai-real`](./class-21-message-module-ai-real)
+- [`class-22-final-practice-review`](./class-22-final-practice-review)
